@@ -1,4 +1,4 @@
-import "./App.css";
+import './App.css'
 import Footer from "./components/footer/Footer";
 import Layout from "./components/layout/Layout";
 
@@ -7,7 +7,7 @@ function App() {
     <>
       <Layout/>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
