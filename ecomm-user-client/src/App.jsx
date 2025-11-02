@@ -1,9 +1,11 @@
 import "./App.css";
+import Footer from "./components/footer/Footer";
+import Layout from "./components/layout/Layout";
 
 function App() {
   return (
     <>
-      <h1 class="text-3xl font-bold  underline">Tailwind Works!</h1>
+      <Layout/>
     </>
   );
 }
