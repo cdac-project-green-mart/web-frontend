@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import "../../index.css"
+import GreenMartLogo from "../greenMartLogo/GreenMartLogo";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -30,8 +32,8 @@ const Navbar = () => {
 
         {/* LEFT: LOGO */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-green-600 rounded-full"></div>
-          <span className="text-2xl font-semibold">Ecobazar</span>
+          <GreenMartLogo/>  
+          <span className="text-2xl font-poppins font-bold">Ecobazar</span>
         </div>
 
         {/* CENTER SEARCH (Hidden on mobile) */}
@@ -139,7 +141,7 @@ const Navbar = () => {
 
       {/* DESKTOP BOTTOM BAR */}
       <div className="hidden md:block w-full bg-gray-50 border-t border-gray-200">
-        <div className="flex items-center gap-10 px-12 py-4 relative">
+        <div className="flex items-center gap-10 px-12 py-4 relative font-poppins text-2xl font-medium">
 
           <ul className="flex items-center gap-8 text-sm">
 
