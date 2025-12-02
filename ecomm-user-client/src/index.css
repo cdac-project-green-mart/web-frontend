@@ -14,6 +14,12 @@
 
   --dropdown-text-light: #000000;
   --dropdown-text-dark: #ffffff;
+
+  --footer-bg-light: #f3f4f6; /* Tailwind gray-100 */
+  --footer-bg-dark: #1f1f1f;
+
+  --footer-text-light: #4b5563; /* gray-600 */
+  --footer-text-dark: #ffffff;
 }
 
 :root {
@@ -22,6 +28,8 @@
   --dropdown-bg: var(--dropdown-bg-light);
   --dropdown-hover: var(--dropdown-hover-light);
   --dropdown-text: var(--dropdown-text-light);
+  --footer-bg: var(--footer-bg-light);
+  --footer-text: var(--footer-text-light);
 }
 
 [data-theme="dark"] {
@@ -30,4 +38,6 @@
   --dropdown-bg: var(--dropdown-bg-dark);
   --dropdown-hover: var(--dropdown-hover-dark);
   --dropdown-text: var(--dropdown-text-dark);
+  --footer-bg: var(--footer-bg-dark);
+  --footer-text: var(--footer-text-dark);
 }
