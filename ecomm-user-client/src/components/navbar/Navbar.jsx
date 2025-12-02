@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
-  const [openCat, setOpenCat] = useState(false);
-  const [openShop, setOpenShop] = useState(false);
-  const [openPages, setOpenPages] = useState(false);
-  const [openBlog, setOpenBlog] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+  const navbarRef = useRef(null);
+
+  const toggleMenu = (menu) => {
+    setOpenMenu(openMenu === menu ? null : menu);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (navbarRef.current && !navbarRef.current.contains(e.target)) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full" ref={navbarRef}>
+
 
       {/* TOP NAV */}
       <nav className="w-full bg-white px-12 py-4 flex items-center justify-between shadow-sm">
@@ -34,6 +48,7 @@ const Navbar = () => {
 
         {/* RIGHT ICONS */}
         <div className="flex items-center gap-8">
+
           {/* Like */}
           <svg className="h-6 w-6" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -57,6 +72,7 @@ const Navbar = () => {
             </svg>
             <span>(219) 555-0114</span>
           </div>
+
         </div>
       </nav>
 
@@ -64,41 +80,19 @@ const Navbar = () => {
       <div className="w-full bg-gray-50 border-t border-gray-200">
         <div className="flex items-center gap-10 px-12 py-4 relative">
 
-          {/* ALL CATEGORIES BUTTON */}
-          <div
-            className="bg-green-600 text-white px-6 py-3 flex items-center gap-3 rounded-sm cursor-pointer"
-            onClick={() => setOpenCat(!openCat)}
-          >
-            <svg className="h-5 w-5" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-            <span className="text-sm">All Categories</span>
-            <svg className={`h-3 w-3 transition-transform ${openCat ? "rotate-180" : ""}`} fill="none" stroke="white" strokeWidth="3" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
-
-          {/* ALL CATEGORIES DROPDOWN */}
-          {openCat && (
-            <div className="absolute left-12 top-20 bg-white border shadow-md w-48 rounded text-sm z-20">
-              <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Vegetables</p>
-              <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fruits</p>
-              <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Groceries</p>
-            </div>
-          )}
+         
 
           {/* MENU LINKS */}
           <ul className="flex items-center gap-8 text-sm">
 
             {/* HOME */}
-            <li className="hover:text-green-600 cursor-pointer">
-              Home
-            </li>
+            <li className="hover:text-green-600 cursor-pointer">Home</li>
 
-            {/* SHOP DROPDOWN */}
+            {/* SHOP */}
             <li className="relative">
-              <div className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                onClick={() => setOpenShop(!openShop)}
+              <div
+                className="flex items-center gap-1 cursor-pointer hover:text-green-600"
+                onClick={() => toggleMenu("shop")}
               >
                 Shop
                 <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
@@ -106,7 +100,7 @@ const Navbar = () => {
                 </svg>
               </div>
 
-              {openShop && (
+              {openMenu === "shop" && (
                 <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20">
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p>
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Product Details</p>
@@ -114,10 +108,11 @@ const Navbar = () => {
               )}
             </li>
 
-            {/* PAGES DROPDOWN */}
+            {/* PAGES */}
             <li className="relative">
-              <div className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                onClick={() => setOpenPages(!openPages)}
+              <div
+                className="flex items-center gap-1 cursor-pointer hover:text-green-600"
+                onClick={() => toggleMenu("pages")}
               >
                 Pages
                 <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
@@ -125,7 +120,7 @@ const Navbar = () => {
                 </svg>
               </div>
 
-              {openPages && (
+              {openMenu === "pages" && (
                 <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20">
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">FAQ</p>
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Terms</p>
@@ -133,10 +128,11 @@ const Navbar = () => {
               )}
             </li>
 
-            {/* BLOG DROPDOWN */}
+            {/* BLOG */}
             <li className="relative">
-              <div className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                onClick={() => setOpenBlog(!openBlog)}
+              <div
+                className="flex items-center gap-1 cursor-pointer hover:text-green-600"
+                onClick={() => toggleMenu("blog")}
               >
                 Blog
                 <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
@@ -144,7 +140,7 @@ const Navbar = () => {
                 </svg>
               </div>
 
-              {openBlog && (
+              {openMenu === "blog" && (
                 <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20">
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Blog List</p>
                   <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Single Post</p>
@@ -154,10 +150,11 @@ const Navbar = () => {
 
             <li className="hover:text-green-600 cursor-pointer">About Us</li>
             <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
-          </ul>
 
+          </ul>
         </div>
       </div>
+
     </div>
   );
 };
