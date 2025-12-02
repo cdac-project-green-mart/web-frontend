@@ -2,16 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navbarRef = useRef(null);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
+  // Close menu on clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
         setOpenMenu(null);
+        setMobileOpen(false);
       }
     };
 
@@ -21,10 +24,9 @@ const Navbar = () => {
 
   return (
     <div className="w-full" ref={navbarRef}>
-
-
+      
       {/* TOP NAV */}
-      <nav className="w-full bg-white px-12 py-4 flex items-center justify-between shadow-sm">
+      <nav className="w-full bg-white px-6 md:px-12 py-4 flex items-center justify-between shadow-sm">
 
         {/* LEFT: LOGO */}
         <div className="flex items-center gap-2">
@@ -32,8 +34,8 @@ const Navbar = () => {
           <span className="text-2xl font-semibold">Ecobazar</span>
         </div>
 
-        {/* CENTER SEARCH */}
-        <div className="flex-1 px-10">
+        {/* CENTER SEARCH (Hidden on mobile) */}
+        <div className="hidden md:flex flex-1 px-10">
           <div className="relative max-w-xl mx-auto w-full">
             <input
               type="text"
@@ -46,8 +48,8 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* RIGHT ICONS */}
-        <div className="flex items-center gap-8">
+        {/* RIGHT ICONS (Desktop only) */}
+        <div className="hidden md:flex items-center gap-8">
 
           {/* Like */}
           <svg className="h-6 w-6" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
@@ -65,27 +67,82 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Phone */}
-          <div className="flex items-center gap-2 text-sm">
-            <svg className="h-5 w-5" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3l2 5-3 2c1.5 3 4 5.5 7 7l2-3 5 2v3a2 2 0 01-2 2h-1C10.82 24 0 13.18 0 1V0a2 2 0 012-2h1v7z"/>
-            </svg>
-            <span>(219) 555-0114</span>
-          </div>
-
         </div>
+
+        {/* MOBILE: HAMBURGER */}
+        <button 
+          className="md:hidden block"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          <svg className="w-7 h-7" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </nav>
 
-      {/* BOTTOM BAR */}
-      <div className="w-full bg-gray-50 border-t border-gray-200">
+      {/* MOBILE MENU */}
+      <div 
+        className={`md:hidden bg-gray-50 border-t border-gray-200 overflow-hidden transition-all duration-300 ${
+          mobileOpen ? "max-h-[500px] py-4" : "max-h-0"
+        }`}
+      >
+        <ul className="flex flex-col gap-3 px-6 text-base">
+
+          <li className="cursor-pointer" onClick={() => setMobileOpen(false)}>Home</li>
+
+          {/* SHOP */}
+          <li>
+            <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMenu("shop")}>
+              <span>Shop</span>
+              <span className={`${openMenu === "shop" ? "rotate-180" : ""} transition-transform`}>▼</span>
+            </div>
+            {openMenu === "shop" && (
+              <div className="ml-4 mt-2 flex flex-col gap-2">
+                <p className="cursor-pointer">Shop Grid</p>
+                <p className="cursor-pointer">Product Details</p>
+              </div>
+            )}
+          </li>
+
+          {/* PAGES */}
+          <li>
+            <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMenu("pages")}>
+              <span>Pages</span>
+              <span className={`${openMenu === "pages" ? "rotate-180" : ""} transition-transform`}>▼</span>
+            </div>
+            {openMenu === "pages" && (
+              <div className="ml-4 mt-2 flex flex-col gap-2">
+                <p className="cursor-pointer">FAQ</p>
+                <p className="cursor-pointer">Terms</p>
+              </div>
+            )}
+          </li>
+
+          {/* BLOG */}
+          <li>
+            <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMenu("blog")}>
+              <span>Blog</span>
+              <span className={`${openMenu === "blog" ? "rotate-180" : ""} transition-transform`}>▼</span>
+            </div>
+            {openMenu === "blog" && (
+              <div className="ml-4 mt-2 flex flex-col gap-2">
+                <p className="cursor-pointer">Blog List</p>
+                <p className="cursor-pointer">Single Post</p>
+              </div>
+            )}
+          </li>
+
+          <li className="cursor-pointer">About Us</li>
+          <li className="cursor-pointer">Contact Us</li>
+        </ul>
+      </div>
+
+      {/* DESKTOP BOTTOM BAR */}
+      <div className="hidden md:block w-full bg-gray-50 border-t border-gray-200">
         <div className="flex items-center gap-10 px-12 py-4 relative">
 
-         
-
-          {/* MENU LINKS */}
           <ul className="flex items-center gap-8 text-sm">
 
-            {/* HOME */}
             <li className="hover:text-green-600 cursor-pointer">Home</li>
 
             {/* SHOP */}
