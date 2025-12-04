@@ -2,4 +2,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @theme {
   --font-poppins: "Poppins", sans-serif;
+  --color-bottombar-light: #ffffff;
+  --color-bottombar-dark: #333333;
+  --bottombar-text-light: #000000;
+  --bottombar-text-dark: #ffffff;
+  --dropdown-bg-light: #ffffff;
+  --dropdown-bg-dark: #2b2b2b;
+
+  --dropdown-hover-light: #f3f4f6; /* gray-100 */
+  --dropdown-hover-dark: #3a3a3a;
+
+  --dropdown-text-light: #000000;
+  --dropdown-text-dark: #ffffff;
+
+  --footer-bg-light: #f3f4f6; /* Tailwind gray-100 */
+  --footer-bg-dark: #1f1f1f;
+
+  --footer-text-light: #4b5563; /* gray-600 */
+  --footer-text-dark: #ffffff;
+}
+
+:root {
+  --bottombar-bg: var(--color-bottombar-light);
+  --bottombar-text: var(--bottombar-text-light);
+  --dropdown-bg: var(--dropdown-bg-light);
+  --dropdown-hover: var(--dropdown-hover-light);
+  --dropdown-text: var(--dropdown-text-light);
+  --footer-bg: var(--footer-bg-light);
+  --footer-text: var(--footer-text-light);
+}
+
+[data-theme="dark"] {
+  --bottombar-bg: var(--color-bottombar-dark);
+  --bottombar-text: var(--bottombar-text-dark);
+  --dropdown-bg: var(--dropdown-bg-dark);
+  --dropdown-hover: var(--dropdown-hover-dark);
+  --dropdown-text: var(--dropdown-text-dark);
+  --footer-bg: var(--footer-bg-dark);
+  --footer-text: var(--footer-text-dark);
 }
