@@ -10,8 +10,7 @@ const Cart = () => {
       name: "Green Capsicum",
       price: 14.0,
       quantity: 5,
-      image:
-        "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=80&h=80&fit=crop",
+      image:"https://cdn.metcash.media/image/upload/f_auto,c_limit,w_1500,q_auto/igashop/images/80060012",
     },
     {
       id: 2,
@@ -19,7 +18,7 @@ const Cart = () => {
       price: 14.0,
       quantity: 5,
       image:
-        "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?w=80&h=80&fit=crop",
+        "https://static.vecteezy.com/system/resources/previews/047/720/803/non_2x/capsicum-on-transparent-background-ai-generative-free-png.png",
     },
   ]);
 
@@ -63,10 +62,11 @@ const Cart = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items Section */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Product Table + Action Buttons in single card */}
           <div className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
             {/* Table Header */}
-            <div className="grid grid-cols-[2.5fr_1fr_1.3fr_1fr_0.5fr] items-center px-6 py-3 border-b border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <div className="grid grid-cols-[2.5fr_1fr_1.3fr_1fr_0.5fr] gap-x-6 items-center px-6 py-3 border-b border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
               <span className="text-left">Product</span>
               <span className="text-right">Price</span>
               <span className="text-center">Quantity</span>
@@ -78,7 +78,7 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div
                 key={item.id}
-                className="grid grid-cols-[2.5fr_1fr_1.3fr_1fr_0.5fr] items-center px-6 py-4 border-b border-gray-200 last:border-b-0"
+                className="grid grid-cols-[2.5fr_1fr_1.3fr_1fr_0.5fr] gap-x-6 items-center px-6 py-4 border-b border-gray-200 last:border-b-0"
               >
                 {/* Product column */}
                 <div className="flex items-center space-x-4">
@@ -139,20 +139,20 @@ const Cart = () => {
                 </div>
               </div>
             ))}
+
+            {/* Action Buttons inside same bordered container */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 text-sm hover:bg-gray-50">
+                Return to shop
+              </button>
+              <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 text-sm hover:bg-gray-50">
+                Update Cart
+              </button>
+            </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-between mt-6 gap-4">
-            <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 text-sm hover:bg-gray-50">
-              Return to shop
-            </button>
-            <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 text-sm hover:bg-gray-50">
-              Update Cart
-            </button>
-          </div>
-
-          {/* Coupon Code Section */}
-          <div className="mt-8">
+          {/* Coupon Code Section in same style card */}
+          <div className="bg-white border border-gray-300 rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-medium mb-4">Coupon Code</h3>
             <div className="flex flex-col sm:flex-row gap-4">
               <input
