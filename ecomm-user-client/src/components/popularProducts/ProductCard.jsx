@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import heartIcon from "../../assets/heart.png";
 import bagIcon from "../../assets/bag.png";
@@ -12,6 +12,11 @@ export default function ProductCard({
   sale,
   selected,
 }) {
+  const [liked, setLiked] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const isRed = liked || hovered;
+
   return (
     <div
       className={`
@@ -29,11 +34,23 @@ export default function ProductCard({
       )}
 
       {/* HEART ICON */}
-      <div className="absolute top-2 right-2">
+      <div
+        className="absolute top-2 right-2 cursor-pointer"
+        onClick={() => setLiked((prev) => !prev)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
         <img
           src={heartIcon}
           alt="wishlist"
-          className="w-5 h-5 opacity-80 hover:opacity-100 cursor-pointer transition"
+          style={{
+            width: "20px",
+            height: "20px",
+            filter: isRed
+              ? "invert(23%) sepia(94%) saturate(7480%) hue-rotate(356deg) brightness(96%) contrast(106%)"
+              : "none",
+            transition: "filter 150ms ease",
+          }}
         />
       </div>
 
