@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import errorImg from "../assets/404error.svg";
 
 export default function NotFound() {
@@ -11,13 +12,12 @@ export default function NotFound() {
 
       <h1 className="text-3xl font-bold mb-3">Oops! Page not found</h1>
 
-
-      <a
-        href="/"
+      <Link
+        to="/"
         className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg transition"
       >
         Back to Home
-      </a>
+      </Link>
     </div>
   );
 }
