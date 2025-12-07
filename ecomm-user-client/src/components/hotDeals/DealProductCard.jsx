@@ -4,7 +4,7 @@ import heart from "../../assets/heart.png";
 
 export default function DealProductCard({ product }) {
   return (
-    <div className="group border border-gray-200/50 rounded-xl bg-white 
+    <div className="relative group border border-gray-200/50 rounded-xl bg-white 
                     h-[327px] w-full p-4 flex flex-col justify-between cursor-pointer
                     hover:text-green-600 transition">
 

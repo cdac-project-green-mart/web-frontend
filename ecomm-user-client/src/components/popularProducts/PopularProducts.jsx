@@ -16,7 +16,7 @@ export default function PopularProducts() {
   const products = [
     { image: apple, title: "Green Apple", price: 14.99, oldPrice: 20.99, rating: 4, sale: "Sale 50%" },
     { image: orange, title: "Fresh Indian Malta", price: 20.0, rating: 4 },
-    { image: cabbage, title: "Chinese Cabbage", price: 12.0, rating: 4, selected: true },
+    { image: cabbage, title: "Chinese Cabbage", price: 12.0, rating: 4 },
     { image: lettuce, title: "Green Lettuce", price: 9.0, rating: 4 },
     { image: eggplant, title: "Eggplant", price: 34.0, rating: 4 },
 
