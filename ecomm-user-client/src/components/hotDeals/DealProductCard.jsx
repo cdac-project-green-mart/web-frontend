@@ -50,7 +50,7 @@ export default function DealProductCard({ product }) {
           Add to Cart
         </button>
 
-        <img src={bag} className="w-5 mt-[2px] opacity-70 group-hover:opacity-100" />
+        <img src={bag} className="w-5 mt-0.5 opacity-70 group-hover:opacity-100" />
       </div>
     </div>
   );
