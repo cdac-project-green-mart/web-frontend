@@ -46,7 +46,7 @@ export default function DealProductCard({ product }) {
 
       {/* BUTTON + CART ICON */}
       <div className="flex justify-between items-center mt-2">
-        <button className="bg-green-600 text-white px-4 py-1 rounded-full text-xs hover:bg-green-700">
+        <button className=" cursor-pointer bg-green-600 text-white px-4 py-1 rounded-full text-xs hover:bg-green-700">
           Add to Cart
         </button>
 

@@ -28,7 +28,7 @@ export default function LeftHeroBanner() {
 
         <p class="opacity-90 text-sm">Free shipping on all your order.</p>
 
-        <button class="bg-white text-[#00B207] px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+        <button class="bg-white text-[#00B207] px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition cursor-pointer">
           Shop now →
         </button>
 

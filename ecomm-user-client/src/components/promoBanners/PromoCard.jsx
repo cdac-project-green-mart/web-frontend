@@ -58,7 +58,7 @@ export default function PromoCard({
                 )}
 
                 {/* Button */}
-                <button className="mt-5 bg-white text-green-600 font-medium px-6 py-2 rounded-full hover:bg-gray-100 transition">
+                <button className="cursor-pointer mt-5 bg-white text-green-600 font-medium px-6 py-2 rounded-full hover:bg-gray-100 transition">
                     Shop Now →
                 </button>
 

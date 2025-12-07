@@ -35,7 +35,7 @@ export default function PopularProducts() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[22px] font-semibold">Popular Products</h2>
 
-          <button className="text-green-600 font-medium hover:underline flex items-center gap-1">
+          <button className="cursor-pointer text-green-600 font-medium hover:underline flex items-center gap-1">
             View All →
           </button>
         </div>

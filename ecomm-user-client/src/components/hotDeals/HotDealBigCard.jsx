@@ -40,7 +40,7 @@ export default function HotDealBigCard({ product }) {
 
       {/* ADD TO CART BUTTON */}
       <button className="w-full bg-green-600 text-white py-2 rounded-full font-medium 
-                         hover:bg-green-700 transition">
+                         hover:bg-green-700 transition cursor-pointer">
         Add to Cart
       </button>
 

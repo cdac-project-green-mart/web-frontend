@@ -20,7 +20,7 @@ export default function SideOffers() {
           <p className="text-sm text-gray-500">SUMMER SALE</p>
           <h2 className="text-2xl font-bold">75% OFF</h2>
           <p className="text-sm text-gray-600 mb-3">Only Fruit & Vegetable</p>
-          <button className="text-green-700 font-semibold hover:underline">
+          <button className="text-green-700 font-semibold hover:underline cursor-pointer">
             Shop Now →
           </button>
         </div>

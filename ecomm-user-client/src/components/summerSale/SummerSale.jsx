@@ -25,7 +25,7 @@ export default function SummerSale() {
             money-back guarantee
           </p>
 
-          <button className="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition">
+          <button className="cursor-pointer mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition">
             Shop Now →
           </button>
         </div>
