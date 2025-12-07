@@ -1,14 +1,14 @@
 import React from "react";
 
-import heartIcon from "../../assets/heart.png";     // wishlist PNG
-import bagIcon from "../../assets/bag.png";       // bottom-right icon PNG
+import heartIcon from "../../assets/heart.png";
+import bagIcon from "../../assets/bag.png";
 
 export default function ProductCard({
   image,
   title,
   price,
   oldPrice,
-  rating,
+  rating = 4,
   sale,
   selected,
 }) {
@@ -16,10 +16,11 @@ export default function ProductCard({
     <div
       className={`
         relative border rounded-xl p-4 bg-white transition cursor-pointer
-        ${selected ? "border-green-600 shadow-md" : "border-gray-200/60"}
-        hover:shadow-md hover:border-green-500
+        ${selected ? "border-green-600 shadow-[0_0_6px_rgba(0,200,0,0.3)]" : "border-gray-200/60"}
+        hover:border-green-500 hover:shadow-[0_0_6px_rgba(0,200,0,0.3)]
       `}
     >
+
       {/* SALE BADGE */}
       {sale && (
         <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
@@ -27,16 +28,16 @@ export default function ProductCard({
         </span>
       )}
 
-      {/* ONLY HEART ICON */}
-      <div className="absolute top-2 right-2 flex flex-col gap-2">
+      {/* HEART ICON */}
+      <div className="absolute top-2 right-2">
         <img
           src={heartIcon}
           alt="wishlist"
-          className="w-5 h-5 opacity-80 hover:opacity-100 hover:brightness-110 cursor-pointer transition"
+          className="w-5 h-5 opacity-80 hover:opacity-100 cursor-pointer transition"
         />
       </div>
 
-      {/* PRODUCT IMAGE */}
+      {/* IMAGE */}
       <img
         src={image}
         alt={title}
@@ -55,11 +56,16 @@ export default function ProductCard({
       </div>
 
       {/* RATING */}
-      <div className="flex items-center text-orange-400 text-xs mt-1">
-        {"★".repeat(rating)}
+      <div className="flex items-center text-xs mt-1">
+        <span className="text-orange-400">
+          {"★".repeat(rating)}
+        </span>
+        <span className="text-gray-300">
+          {"★".repeat(5 - rating)}
+        </span>
       </div>
 
-      {/* CART/LOCK ICON (BOTTOM-RIGHT) */}
+      {/* CART ICON */}
       <img
         src={bagIcon}
         alt="cart"
