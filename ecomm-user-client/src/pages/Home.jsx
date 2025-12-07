@@ -1,3 +1,4 @@
+import FeaturedBrands from "../components/featuredBrands/FeaturedBrands";
 import HeroSection from "../components/heroSection/HeroSection";
 import HotDeals from "../components/hotDeals/HotDeals";
 import LatestNews from "../components/latestNews/LatestNews";
@@ -20,6 +21,7 @@ export default function Home() {
       <FeaturedProducts/>
       <LatestNews/>
       <Testimonials/>
+      <FeaturedBrands/>
       {/* other sections will come here */}
     </div>
   );
