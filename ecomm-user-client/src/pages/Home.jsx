@@ -1,5 +1,6 @@
 import HeroSection from "../components/heroSection/HeroSection";
 import HotDeals from "../components/hotDeals/HotDeals";
+import LatestNews from "../components/latestNews/LatestNews";
 import PopularCategories from "../components/popularCategories/PopularCategories";
 import FeaturedProducts from "../components/popularProducts/FeaturedProducts";
 import PopularProducts from "../components/popularProducts/PopularProducts";
@@ -16,6 +17,7 @@ export default function Home() {
       <HotDeals/>
       <SummerSale/>
       <FeaturedProducts/>
+      <LatestNews/>
       {/* other sections will come here */}
     </div>
   );
