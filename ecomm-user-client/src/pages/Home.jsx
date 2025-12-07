@@ -1,6 +1,7 @@
 import HeroSection from "../components/heroSection/HeroSection";
 import PopularCategories from "../components/popularCategories/PopularCategories";
 import PopularProducts from "../components/popularProducts/PopularProducts";
+import PromoSection from "../components/promoBanners/PromoSection";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <HeroSection/>
       <PopularCategories/>
       <PopularProducts/>
+      <PromoSection/>
       {/* other sections will come here */}
     </div>
   );
