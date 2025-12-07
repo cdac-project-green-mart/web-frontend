@@ -1,6 +1,7 @@
 import FeaturedBrands from "../components/featuredBrands/FeaturedBrands";
 import HeroSection from "../components/heroSection/HeroSection";
 import HotDeals from "../components/hotDeals/HotDeals";
+import InstagramFeed from "../components/instagram/InstagramFeed";
 import LatestNews from "../components/latestNews/LatestNews";
 import PopularCategories from "../components/popularCategories/PopularCategories";
 import FeaturedProducts from "../components/popularProducts/FeaturedProducts";
@@ -22,7 +23,7 @@ export default function Home() {
       <LatestNews/>
       <Testimonials/>
       <FeaturedBrands/>
-      {/* other sections will come here */}
+      <InstagramFeed/>
     </div>
   );
 }
