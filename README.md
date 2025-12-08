@@ -1,6 +1,6 @@
 ﻿# web-frontend
 
-## Dev guidelines : Follow the convention
+## Dev guidelines
 
 link: https://www.notion.so/Project-Dev-Guidelines-29a18b2281a58086ab21fc9b791231c6?source=copy_link
 
@@ -37,4 +37,5 @@ npm run lint:fix
 ```bash
 npm run format
 ```
+
 
