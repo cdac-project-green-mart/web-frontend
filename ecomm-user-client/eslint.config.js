@@ -6,9 +6,14 @@ import prettier from 'eslint-config-prettier'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
+  {
+    ignores: ['dist/**'], // ⬅️ Add this line
+  },
+
   // Base JS setup
   {
     files: ['**/*.{js,mjs,cjs,jsx}'],
+
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
