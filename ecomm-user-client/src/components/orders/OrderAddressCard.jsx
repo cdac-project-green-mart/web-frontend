@@ -1,11 +1,10 @@
-import React from "react";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const AddressBlock = ({ title, customer }) => {
   return (
     <div className="p-4 md:p-5">
-      <h2 className="text-xs font-semibold text-gray-400 uppercase mb-3">
-        {title}
-      </h2>
+      <h2 className="text-xs font-semibold text-gray-400 uppercase mb-3">{title}</h2>
       <p className="font-semibold text-gray-900 mb-1">{customer.name}</p>
       <p className="text-sm text-gray-600 mb-3">{customer.addressLine1}</p>
       <div className="text-xs text-gray-500 space-y-1">
@@ -19,8 +18,18 @@ const AddressBlock = ({ title, customer }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
+AddressBlock.propTypes = {
+  title: PropTypes.string.isRequired,
+  customer: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    addressLine1: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+  }).isRequired,
+}
 
 const OrderAddressesCard = ({ customer }) => {
   return (
@@ -34,7 +43,16 @@ const OrderAddressesCard = ({ customer }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OrderAddressesCard;
+OrderAddressesCard.propTypes = {
+  customer: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    addressLine1: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
+export default OrderAddressesCard

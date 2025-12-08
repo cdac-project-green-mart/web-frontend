@@ -1,7 +1,16 @@
-import React from "react";
+import React from 'react'
+import PropTypes from 'prop-types'
+
+const productPropType = PropTypes.shape({
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  quantity: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+})
 
 const OrderProductRow = ({ product }) => {
-  const subtotal = product.price * product.quantity;
+  const subtotal = product.price * product.quantity
 
   return (
     <div className="grid grid-cols-4 gap-4 px-6 py-4 border-t border-gray-100 items-center">
@@ -12,9 +21,7 @@ const OrderProductRow = ({ product }) => {
           alt={product.name}
           className="w-12 h-12 rounded-full object-cover"
         />
-        <span className="text-sm font-medium text-gray-800">
-          {product.name}
-        </span>
+        <span className="text-sm font-medium text-gray-800">{product.name}</span>
       </div>
 
       {/* Price with light background */}
@@ -32,11 +39,14 @@ const OrderProductRow = ({ product }) => {
       </div>
 
       {/* Subtotal */}
-      <div className="text-sm font-medium text-gray-900">
-        {subtotal.toFixed(2)}
-      </div>
+      <div className="text-sm font-medium text-gray-900">{subtotal.toFixed(2)}</div>
     </div>
-  );
-};
+  )
+}
 
-export default OrderProductRow;
+OrderProductRow.propTypes = {
+  product: productPropType.isRequired,
+}
+
+export { productPropType }
+export default OrderProductRow

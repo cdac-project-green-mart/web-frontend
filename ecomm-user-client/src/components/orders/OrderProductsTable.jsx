@@ -1,5 +1,6 @@
-import React from "react";
-import OrderProductRow from "./OrderProductRow";
+import React from 'react'
+import PropTypes from 'prop-types'
+import OrderProductRow, { productPropType } from './OrderProductRow'
 
 const OrderProductsTable = ({ products }) => {
   return (
@@ -17,7 +18,11 @@ const OrderProductsTable = ({ products }) => {
         <OrderProductRow key={product.id} product={product} />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default OrderProductsTable;
+OrderProductsTable.propTypes = {
+  products: PropTypes.arrayOf(productPropType).isRequired,
+}
+
+export default OrderProductsTable

@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const OrderSummaryCard = ({
   id,
@@ -38,13 +39,20 @@ const OrderSummaryCard = ({
         <hr className="my-2 border-gray-100" />
         <div className="flex justify-between items-center">
           <span className="text-gray-800 font-semibold">Total</span>
-          <span className="text-green-600 font-bold text-lg">
-            ${total.toFixed(2)}
-          </span>
+          <span className="text-green-600 font-bold text-lg">${total.toFixed(2)}</span>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OrderSummaryCard;
+OrderSummaryCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  paymentMethod: PropTypes.string.isRequired,
+  subtotal: PropTypes.number.isRequired,
+  discountPercent: PropTypes.number.isRequired,
+  shippingLabel: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+}
+
+export default OrderSummaryCard

@@ -1,13 +1,12 @@
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import React from "react";
 const OrderHeader = ({ date, productsCount, onBackClick }) => {
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex flex-col gap-1">
         <div className="flex flex-wrap items-center gap-2 text-sm md:text-base">
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
-            Order Details
-          </h1>
+          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Order Details</h1>
           <span className="text-gray-300">•</span>
           <span className="text-gray-500">{date}</span>
           <span className="text-gray-300">•</span>
@@ -23,7 +22,13 @@ const OrderHeader = ({ date, productsCount, onBackClick }) => {
         Back to List
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default OrderHeader;
+OrderHeader.propTypes = {
+  date: PropTypes.string.isRequired,
+  productsCount: PropTypes.number.isRequired,
+  onBackClick: PropTypes.func,
+}
+
+export default OrderHeader
