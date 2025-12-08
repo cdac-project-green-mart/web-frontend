@@ -42,7 +42,7 @@ export default function Login() {
 
         <p className="mt-4 text-sm">
           Don’t have account?{" "}
-          <Link to="/Register" className="font-bold">
+          <Link to="/register" className="font-bold">
             Register
           </Link>
         </p>

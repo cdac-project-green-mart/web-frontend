@@ -53,7 +53,7 @@ export default function CreateAccount() {
 
         <p className="mt-4 text-sm">
           Already have account?  <Link
-        to="/Login" className="font-bold"> 
+        to="/login" className="font-bold"> 
         Login
       </Link>
         </p>
