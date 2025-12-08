@@ -6,9 +6,21 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navbarRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
+  };
+
+  const handleMouseEnter = (menu) => {
+    clearTimeout(hoverTimeoutRef.current);
+    setOpenMenu(menu);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setOpenMenu(null);
+    }, 200);
   };
 
   // Close menu on clicking outside dropdowns (but allow toggle clicks)
@@ -173,7 +185,7 @@ const Navbar = () => {
             <li className="hover:text-green-600 cursor-pointer">Home</li>
 
             {/* SHOP */}
-            <li className="relative">
+            <li className="relative" onMouseEnter={() => handleMouseEnter("shop")} onMouseLeave={handleMouseLeave}>
               <div
                 className="flex items-center gap-1 cursor-pointer hover:text-green-600"
                 onClick={() => toggleMenu("shop")}
@@ -194,7 +206,7 @@ const Navbar = () => {
             </li>
 
             {/* PAGES */}
-            <li className="relative">
+            <li className="relative" onMouseEnter={() => handleMouseEnter("pages")} onMouseLeave={handleMouseLeave}>
               <div
                 className="flex items-center gap-1 cursor-pointer hover:text-green-600"
                 onClick={() => toggleMenu("pages")}
@@ -215,7 +227,7 @@ const Navbar = () => {
             </li>
 
             {/* BLOG */}
-            <li className="relative">
+            <li className="relative" onMouseEnter={() => handleMouseEnter("blog")} onMouseLeave={handleMouseLeave}>
               <div
                 className="flex items-center gap-1 cursor-pointer hover:text-green-600"
                 onClick={() => toggleMenu("blog")}
