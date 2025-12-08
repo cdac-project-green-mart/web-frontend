@@ -1,6 +1,6 @@
 import React from "react";
 import bag from "../../assets/bag.png";
-import heart from "../../assets/heart.png";
+
 
 export default function DealProductCard({ product }) {
   return (
