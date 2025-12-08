@@ -34,7 +34,6 @@ const Navbar = () => {
     },
   ]);
 
-  // DYNAMIC TOTAL PRICE
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.price * item.qty, 0)
     .toFixed(2);
@@ -54,11 +53,9 @@ const Navbar = () => {
     }, 200);
   };
 
-  // CLOSE DROPDOWNS WHEN CLICKING OUTSIDE (BUT DO NOT CLOSE CART)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (cartOpen) return;
-
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
         setOpenMenu(null);
         setMobileOpen(false);
@@ -72,15 +69,16 @@ const Navbar = () => {
   return (
     <>
       <div className="w-full" ref={navbarRef}>
-        {/* NAVBAR MAIN */}
+        {/* TOP NAV BAR */}
         <nav className="w-full bg-white px-6 md:px-12 py-4 flex items-center justify-between shadow-sm">
+
           {/* LOGO */}
           <div className="flex items-center gap-2">
             <GreenMartLogo />
             <span className="text-2xl font-poppins font-bold">Ecobazar</span>
           </div>
 
-          {/* SEARCH BAR (Desktop only) */}
+          {/* SEARCH BAR (Desktop) */}
           <div className="hidden md:flex flex-1 px-10">
             <div className="relative max-w-xl mx-auto w-full">
               <input
@@ -96,7 +94,8 @@ const Navbar = () => {
 
           {/* RIGHT ICONS */}
           <div className="hidden md:flex items-center gap-8">
-            {/* like icon */}
+
+            {/* Like */}
             <svg
               className="h-6 w-6"
               fill="none"
@@ -111,7 +110,7 @@ const Navbar = () => {
               />
             </svg>
 
-            {/* CART BUTTON */}
+            {/* Cart Button */}
             <div
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setCartOpen(true)}
@@ -137,7 +136,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
+          {/* MOBILE HAMBURGER */}
           <button
             className="md:hidden block"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -170,9 +169,7 @@ const Navbar = () => {
                 onClick={() => toggleMenu("shop")}
               >
                 <span>Shop</span>
-                <span
-                  className={`${openMenu === "shop" ? "rotate-180" : ""} transition-transform`}
-                >
+                <span className={`${openMenu === "shop" ? "rotate-180" : ""} transition-transform`}>
                   ▼
                 </span>
               </div>
@@ -192,9 +189,7 @@ const Navbar = () => {
                 onClick={() => toggleMenu("pages")}
               >
                 <span>Pages</span>
-                <span
-                  className={`${openMenu === "pages" ? "rotate-180" : ""} transition-transform`}
-                >
+                <span className={`${openMenu === "pages" ? "rotate-180" : ""} transition-transform`}>
                   ▼
                 </span>
               </div>
@@ -214,9 +209,7 @@ const Navbar = () => {
                 onClick={() => toggleMenu("blog")}
               >
                 <span>Blog</span>
-                <span
-                  className={`${openMenu === "blog" ? "rotate-180" : ""} transition-transform`}
-                >
+                <span className={`${openMenu === "blog" ? "rotate-180" : ""} transition-transform`}>
                   ▼
                 </span>
               </div>
@@ -234,7 +227,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* DESKTOP DROPDOWN BAR */}
+        {/* DESKTOP DROPDOWN NAV */}
         <div className="hidden md:block w-full bg-gray-50 border-t border-gray-200">
           <div className="flex items-center gap-10 px-12 py-4 relative font-poppins text-2xl font-medium">
             <ul className="flex items-center gap-8 text-sm">
@@ -320,7 +313,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* CART SIDEBAR POPUP */}
+      {/* CART POPUP */}
       <CartPopup
         open={cartOpen}
         onClose={() => setCartOpen(false)}
