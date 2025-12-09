@@ -1,4 +1,5 @@
 import React from "react";
+import  {Link} from "react-router-dom"
 
 export default function CartPopup({ open, onClose, items, setItems }) {
   const removeItem = (id) => {
@@ -113,9 +114,10 @@ export default function CartPopup({ open, onClose, items, setItems }) {
               Checkout
             </button>
 
-            <button className="cursor-pointer bg-green-100 text-green-700 py-3 rounded-full font-semibold text-[15px]">
+
+            <Link to="/cart" className="text-center cursor-pointer bg-green-100 text-green-700 py-3 rounded-full font-semibold text-[15px]">
               Go To Cart
-            </button>
+            </Link>
           </div>
         </div>
       </div>
