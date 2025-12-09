@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import {Link} from "react-router-dom"
 import "../../index.css";
 import GreenMartLogo from "../greenMartLogo/GreenMartLogo";
 import CartPopup from "../cartPopup/CartPopup";
@@ -75,7 +76,7 @@ const Navbar = () => {
           {/* LOGO */}
           <div className="flex items-center gap-2">
             <GreenMartLogo />
-            <span className="text-2xl font-poppins font-bold">Ecobazar</span>
+            <Link to="/" className="text-2xl font-poppins font-bold">Ecobazar</Link>
           </div>
 
           {/* SEARCH BAR (Desktop) */}
@@ -232,7 +233,7 @@ const Navbar = () => {
           <div className="flex items-center gap-10 px-12 py-4 relative font-poppins text-2xl font-medium">
             <ul className="flex items-center gap-8 text-sm">
 
-              <li className="hover:text-green-600 cursor-pointer">Home</li>
+              <Link to="/"><li className="hover:text-green-600 cursor-pointer">Home</li></Link>
 
               {/* SHOP */}
               <li
@@ -276,8 +277,11 @@ const Navbar = () => {
 
                 {openMenu === "pages" && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">FAQ</p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Terms</p>
+                    <Link to='/cart'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Cart</p></Link>
+                    <Link to='/orders'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p></Link>
+                    <Link to='/login'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p></Link>
+                    <Link to='/register'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p></Link>
+                    
                   </div>
                 )}
               </li>
