@@ -8,7 +8,7 @@ import Checkout from '../pages/Checkout.jsx'
 import Orders from '../pages/Orders.jsx'
 import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
-
+import About from '../pages/About.jsx'
 export default function Router() {
   return (
     <Routes>
@@ -20,6 +20,7 @@ export default function Router() {
         <Route path="orders" element={<Orders />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="about" element ={<About/>}/>
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
