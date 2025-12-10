@@ -1,7 +1,7 @@
 import React from "react";
 import googlePlaylogo from "../../assets/google-play-brands-solid.svg"
 import applelogo from "../../assets/apple-brands-solid.svg"
-
+import {Link} from "react-router-dom"
 const Footer = () => {
   return (
     <footer className="w-full bg-gray-100 pt-10">
@@ -58,7 +58,7 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Proxy</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">About</li>
+            <li className="hover:text-green-600 cursor-pointer"><Link to="/about"><li className="hover:text-green-600 cursor-pointer">About</li></Link></li>
             <li className="hover:text-green-600 cursor-pointer">Shop</li>
             <li className="hover:text-green-600 cursor-pointer">Product</li>
             <li className="hover:text-green-600 cursor-pointer">Track Order</li>
