@@ -310,7 +310,7 @@ const Navbar = () => {
                 )}
               </li>
 
-              <li className="hover:text-green-600 cursor-pointer">About Us</li>
+              <Link to="/about"><li className="hover:text-green-600 cursor-pointer">About Us</li></Link>
               <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
             </ul>
           </div>
