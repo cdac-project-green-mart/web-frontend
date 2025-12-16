@@ -1,5 +1,5 @@
 import React from "react";
-import aboutImage from "../../assets/farmer-Image.png";
+import aboutImage from "../../assets/farmer-image.png";
 
 export default function AboutFeatures() {
   const features = [
