@@ -1,11 +1,10 @@
 import { Outlet } from 'react-router-dom'
+import VendorHeader from './VendorHeader'
 
 export default function VendorLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="bg-green-700 text-white px-6 py-4 shadow-md">
-        <h1 className="text-xl font-semibold">Vendor Portal</h1>
-      </header>
+      <VendorHeader />
       <main className="flex-grow container mx-auto px-4 py-6">
         <Outlet />
       </main>
@@ -15,3 +14,4 @@ export default function VendorLayout() {
     </div>
   )
 }
+
