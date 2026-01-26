@@ -45,6 +45,7 @@ export default function Router() {
       <Route path="/vendor/register" element={<VendorRegister />} />
       <Route path="/vendor" element={<VendorLayout />}>
         <Route index element={<VendorDashboard />} />
+        <Route path="dashboard" element={<VendorDashboard />} />
         <Route path="inventory" element={<VendorInventory />} />
         <Route path="add-product" element={<VendorAddProduct />} />
         <Route path="orders" element={<VendorOrders />} />

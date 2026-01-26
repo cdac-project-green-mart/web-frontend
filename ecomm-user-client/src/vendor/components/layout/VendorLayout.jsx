@@ -16,9 +16,11 @@ export default function VendorLayout() {
           <main className="flex-grow px-6 py-6">
             <Outlet />
           </main>
-          <VendorFooter />
         </div>
       </div>
+
+      {/* Footer - Full width at bottom */}
+      <VendorFooter />
     </div>
   )
 }
