@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import VendorHeader from './VendorHeader'
+import VendorFooter from './VendorFooter'
 
 export default function VendorLayout() {
   return (
@@ -8,9 +9,7 @@ export default function VendorLayout() {
       <main className="flex-grow container mx-auto px-4 py-6">
         <Outlet />
       </main>
-      <footer className="bg-gray-800 text-gray-300 text-center py-4 text-sm">
-        &copy; 2026 GreenMart Vendor Portal
-      </footer>
+      <VendorFooter />
     </div>
   )
 }
