@@ -45,7 +45,7 @@ export default function VendorReports() {
       </div>
 
       {/* Generate Reports Controls */}
-      <div className="flex flex-wrap items-end gap-3 bg-white p-1 rounded-lg">
+      <div className="flex flex-wrap items-end gap-3 p-1 rounded-lg">
         <div className="flex flex-col gap-1">
           {/* Label placeholders if needed, assuming implicit labeling or alignment */}
           <select
@@ -159,12 +159,12 @@ export default function VendorReports() {
           <span className="text-red-400">⏰</span> Schedule Reports
         </h2>
 
-        <div className="bg-white rounded-lg p-0">
-          <div className="flex flex-wrap items-center gap-6 mb-6">
-            <div className="flex items-center gap-3">
+        <div className="bg-white rounded-lg p-5">
+          <div className="flex flex-wrap items-center gap-12 mb-6">
+            <div className="flex items-center gap-6">
               <span className="text-sm text-gray-600 font-medium">Frequency</span>
               <select
-                className="w-40 px-3 py-2 border border-gray-200 rounded text-sm text-gray-700 focus:outline-none"
+                className="w-48 px-3 py-2 border border-gray-200 rounded text-sm text-gray-600 bg-white focus:outline-none"
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value)}
               >
@@ -174,10 +174,10 @@ export default function VendorReports() {
               </select>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-6">
               <span className="text-sm text-gray-600 font-medium">Format</span>
               <select
-                className="w-40 px-3 py-2 border border-gray-200 rounded text-sm text-gray-700 focus:outline-none"
+                className="w-48 px-3 py-2 border border-gray-200 rounded text-sm text-gray-600 bg-white focus:outline-none"
                 value={scheduleFormat}
                 onChange={(e) => setScheduleFormat(e.target.value)}
               >
@@ -187,12 +187,12 @@ export default function VendorReports() {
               </select>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-6">
               <span className="text-sm text-gray-600 font-medium">Email Report</span>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="rounded border-gray-300 w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 w-5 h-5 text-gray-800 focus:ring-0 cursor-pointer"
                   checked={emailReport}
                   onChange={(e) => setEmailReport(e.target.checked)}
                 />
@@ -201,16 +201,16 @@ export default function VendorReports() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="px-6 py-2 bg-gray-100 text-gray-600 text-sm rounded hover:bg-gray-200 transition-colors">
+          <div className="flex items-center gap-3">
+            <button className="px-10 py-2.5 bg-gray-100 text-gray-500 text-sm font-medium rounded hover:bg-gray-200 transition-colors border border-gray-200">
               Cancel
             </button>
-            <button className="px-6 py-2 bg-gray-900 text-white text-sm rounded hover:bg-black transition-colors">
+            <button className="px-10 py-2.5 bg-gray-900 text-white text-sm font-medium rounded hover:bg-black transition-colors">
               Save Schedule
             </button>
           </div>
 
-          <p className="mt-4 text-xs text-gray-400">
+          <p className="mt-4 text-xs text-gray-500">
             Scheduled reports will be emailed automatically on selected frequency.
           </p>
         </div>
