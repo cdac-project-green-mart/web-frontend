@@ -9,18 +9,20 @@ import Orders from '../pages/Orders.jsx'
 import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
 import About from '../pages/About.jsx'
+import ProductDetails from '../pages/ProductDetails';
 export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
+        <Route path="products/:id" element={<ProductDetails />} /> 
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="orders" element={<Orders />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="about" element ={<About/>}/>
+        <Route path="about" element={<About />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
