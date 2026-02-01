@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const MOCK_RETURNS = [
   {
@@ -188,7 +189,9 @@ export default function VendorReturns() {
                   </div>
                 </td>
                 <td className="p-4 align-middle">
-                  <span className="text-blue-500 hover:underline cursor-pointer">{item.orderId}</span>
+                  <Link to={`/vendor/order-details/${item.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
+                    {item.orderId}
+                  </Link>
                 </td>
                 <td className="p-4 align-middle text-gray-600">{item.returnReason}</td>
                 <td className="p-4 align-middle text-gray-600">{item.returnDate}</td>

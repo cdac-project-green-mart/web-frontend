@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const MOCK_PAYMENTS = [
   {
@@ -182,7 +183,11 @@ export default function VendorPayments() {
                       onChange={() => handleSelectOne(p.id)}
                     />
                   </td>
-                  <td className="p-4 align-middle text-gray-500 font-medium">{p.orderId}</td>
+                  <td className="p-4 align-middle text-gray-500 font-medium">
+                    <Link to={`/vendor/order-details/${p.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
+                      {p.orderId}
+                    </Link>
+                  </td>
                   <td className="p-4 align-middle text-gray-500">{p.date}</td>
                   <td className="p-4 align-middle text-gray-500">{p.txnId}</td>
                   <td className="p-4 align-middle">

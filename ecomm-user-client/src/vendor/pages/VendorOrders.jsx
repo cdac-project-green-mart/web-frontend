@@ -207,7 +207,9 @@ export default function VendorOrders() {
 
                 <td className="p-3">{order.product}</td>
                 <td className="p-3 text-blue-600">
-                  #{order.id}
+                  <Link to={`/vendor/order-details/${order.id}`} className="hover:underline">
+                    #{order.id}
+                  </Link>
                 </td>
                 <td className="p-3">
                   {order.dateReceived}
