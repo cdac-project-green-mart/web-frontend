@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const DATA = {
   unshipped: [
@@ -253,9 +254,12 @@ export default function VendorOrders() {
                       )}
                       {activeTab === 'shipped' && (
                         <>
-                          <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
+                          <Link
+                            to={`/vendor/order-details/${order.id}`}
+                            className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+                          >
                             View Details
-                          </button>
+                          </Link>
                           <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
                             Download Invoice
                           </button>

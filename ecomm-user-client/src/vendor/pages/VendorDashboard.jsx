@@ -90,8 +90,8 @@ export default function VendorDashboard() {
                 key={p}
                 onClick={() => setSalesPeriod(p)}
                 className={`px-3 py-1 rounded text-sm ${salesPeriod === p
-                    ? 'bg-gray-800 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
               >
                 {p.toUpperCase()}
@@ -131,7 +131,11 @@ export default function VendorDashboard() {
           <tbody className="text-sm">
             {recentOrders.map((order) => (
               <tr key={order.orderId} className="border-t border-gray-100">
-                <td className="py-3 text-gray-700">{order.orderId}</td>
+                <td className="py-3 text-gray-700">
+                  <Link to={`/vendor/order-details/${order.orderId}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                    {order.orderId}
+                  </Link>
+                </td>
                 <td className="py-3 text-gray-700">{order.product}</td>
                 <td className="py-3 text-gray-700">{order.customer}</td>
                 <td className="py-3 text-gray-700">{order.date}</td>

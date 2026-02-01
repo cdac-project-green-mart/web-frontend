@@ -159,7 +159,7 @@ export default function VendorReports() {
           <span className="text-red-400">⏰</span> Schedule Reports
         </h2>
 
-        <div className="bg-white rounded-lg p-5">
+        <div className="bg-white rounded-lg p-5 ">
           <div className="flex flex-wrap items-center gap-12 mb-6">
             <div className="flex items-center gap-6">
               <span className="text-sm text-gray-600 font-medium">Frequency</span>

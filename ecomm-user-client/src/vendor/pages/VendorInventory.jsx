@@ -1,35 +1,41 @@
-import { useState } from 'react'
-
-const initialProducts = [
-  {
-    id: 'BLU-TS-001',
-    name: 'Blue T-Shirt',
-    quantity: 120,
-    price: 499,
-    status: 'Active',
-  },
-  {
-    id: 'MUG-002',
-    name: 'Coffee Mug',
-    quantity: 210,
-    price: 249,
-    status: 'Low Stock',
-  },
-  {
-    id: 'NBK-010',
-    name: 'Notebook',
-    quantity: 150,
-    price: 149,
-    status: 'Active',
-  },
-]
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+// import { getVendorProducts, updateVendorProduct, deleteVendorProduct } from '../../api/vendor'
 
 export default function VendorInventory() {
-  const [products, setProducts] = useState(initialProducts)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const [editedRows, setEditedRows] = useState({})
   const [openMenuId, setOpenMenuId] = useState(null)
   const [selectedIds, setSelectedIds] = useState(new Set())
   const [isBulkActionsOpen, setIsBulkActionsOpen] = useState(false)
+
+  useEffect(() => {
+    loadProducts()
+  }, [])
+
+  const loadProducts = async () => {
+    try {
+      const data = await getVendorProducts()
+      // Map backend data to table format if needed
+      // Backend: { _id, name, stock, price, ... }
+      // Table expects: { id, name, quantity, price, status... }
+      const formatted = data.map(p => ({
+        id: p._id,
+        productId: p._id, // Display ID
+        name: p.name,
+        quantity: p.stock,
+        price: p.price,
+        status: p.stock > 0 ? (p.stock < 10 ? 'Low Stock' : 'Active') : 'Out of Stock',
+        image: p.images?.[0]
+      }))
+      setProducts(formatted)
+    } catch (err) {
+      console.error("Failed to load inventory", err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Handle inline edits
   const handleChange = (id, field, value) => {
@@ -63,9 +69,27 @@ export default function VendorInventory() {
 
   const isAllSelected = products.length > 0 && selectedIds.size === products.length
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const idsToUpdate = Object.keys(editedRows)
+    // Process updates in parallel
+    // Ideally use Promise.allSettled
+    for (const id of idsToUpdate) {
+      const product = products.find(p => p.id === id)
+      if (!product) continue
+
+      try {
+        await updateVendorProduct(id, {
+          stock: Number(product.quantity),
+          price: Number(product.price)
+        })
+      } catch (err) {
+        console.error(`Failed to update product ${id}`, err)
+        alert(`Failed to update ${product.name}`)
+      }
+    }
     setEditedRows({})
-    console.log('Saved changes:', products.filter(p => editedRows[p.id]))
+    alert("Changes saved!")
+    loadProducts() // Reload to confirm state
   }
 
   return (
@@ -80,9 +104,11 @@ export default function VendorInventory() {
           <button className="px-4 py-2 border border-gray-300 rounded bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-medium">
             Export
           </button>
-          <button className="px-4 py-2 border border-gray-800 rounded bg-white text-gray-800 hover:bg-gray-50 text-sm font-semibold">
-            + Add Product
-          </button>
+          <Link to="/vendor/add-product">
+            <button className="px-4 py-2 border border-gray-800 rounded bg-white text-gray-800 hover:bg-gray-50 text-sm font-semibold">
+              + Add Product
+            </button>
+          </Link>
         </div>
       </div>
 
