@@ -33,9 +33,7 @@ const OrderProductRow = ({ product }) => {
 
       {/* Quantity with light background */}
       <div className="text-sm text-gray-700">
-        <span className="inline-block px-3 py-1 rounded-full bg-gray-50">
-          x{product.quantity}
-        </span>
+        <span className="inline-block px-3 py-1 rounded-full bg-gray-50">x{product.quantity}</span>
       </div>
 
       {/* Subtotal */}

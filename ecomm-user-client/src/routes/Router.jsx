@@ -9,7 +9,7 @@ import Orders from '../pages/Orders.jsx'
 import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
 import About from '../pages/About.jsx'
-import ProductDetails from '../pages/ProductDetails';
+import ProductDetails from '../pages/ProductDetails.jsx';
 export default function Router() {
   return (
     <Routes>
