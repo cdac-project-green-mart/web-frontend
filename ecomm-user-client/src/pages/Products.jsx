@@ -19,13 +19,22 @@ useEffect(() => {
 
       const allProducts = data.products || data || [];
 
-      const filteredProducts = category
-        ? allProducts.filter(
-            (p) =>
-              p.category &&
-              p.category.toLowerCase() === category.toLowerCase()
-          )
-        : allProducts;
+      let filteredProducts = allProducts;
+      if (category) {
+        filteredProducts = filteredProducts.filter(
+          (p) =>
+            p.category &&
+            p.category.toLowerCase() === category.toLowerCase()
+        );
+      }
+      if (search) {
+        const q = search.toLowerCase();
+        filteredProducts = filteredProducts.filter(
+          (p) =>
+            (p.name && p.name.toLowerCase().includes(q)) ||
+            (p.title && p.title.toLowerCase().includes(q))
+        );
+      }
 
       setProducts(filteredProducts);
     } catch (err) {
