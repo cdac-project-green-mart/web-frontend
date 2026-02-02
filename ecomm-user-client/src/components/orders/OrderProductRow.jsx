@@ -19,7 +19,7 @@ const OrderProductRow = ({ product }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-12 h-12 rounded-full object-cover"
+          className="w-14 h-14 rounded object-cover"
         />
         <span className="text-sm font-medium text-gray-800">{product.name}</span>
       </div>
@@ -27,19 +27,17 @@ const OrderProductRow = ({ product }) => {
       {/* Price with light background */}
       <div className="text-sm text-gray-700">
         <span className="inline-block px-3 py-1 rounded-full bg-gray-50">
-          ${product.price.toFixed(2)}
+          ₹{product.price.toFixed(2)}
         </span>
       </div>
 
       {/* Quantity with light background */}
       <div className="text-sm text-gray-700">
-        <span className="inline-block px-3 py-1 rounded-full bg-gray-50">
-          x{product.quantity}
-        </span>
+        <span className="inline-block px-3 py-1 rounded-full bg-gray-50">x{product.quantity}</span>
       </div>
 
       {/* Subtotal */}
-      <div className="text-sm font-medium text-gray-900">{subtotal.toFixed(2)}</div>
+      <div className="text-sm font-medium text-gray-900">₹{subtotal.toFixed(2)}</div>
     </div>
   )
 }

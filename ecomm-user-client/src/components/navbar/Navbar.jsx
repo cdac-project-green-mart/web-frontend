@@ -1,82 +1,80 @@
-import React, { useState, useEffect, useRef } from "react";
-import {Link} from "react-router-dom"
-import "../../index.css";
-import GreenMartLogo from "../greenMartLogo/GreenMartLogo";
-import CartPopup from "../cartPopup/CartPopup";
-import orange from "../../assets/products/orange.jpg";
-import apple from "../../assets/products/apple.jpg";
+import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import '../../index.css'
+import GreenMartLogo from '../greenMartLogo/GreenMartLogo'
+import CartPopup from '../cartPopup/CartPopup'
+import { getCartItems, getCartTotalItems } from '../../utils/cartUtils'
 
 const Navbar = () => {
-  const [openMenu, setOpenMenu] = useState(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [cartOpen, setCartOpen] = useState(false)
 
-  const navbarRef = useRef(null);
-  const hoverTimeoutRef = useRef(null);
+  const navbarRef = useRef(null)
+  const hoverTimeoutRef = useRef(null)
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Fresh Indian Orange",
-      qtyLabel: "1 kg",
-      qty: 1,
-      price: 12,
-      img: orange,
-      bordered: true,
-    },
-    {
-      id: 2,
-      name: "Green Apple",
-      qtyLabel: "1 kg",
-      qty: 1,
-      price: 14,
-      img: apple,
-      bordered: false,
-    },
-  ]);
+  const [cartTotal, setCartTotal] = useState(0)
+  const [cartItemCount, setCartItemCount] = useState(0)
 
-  const totalPrice = cartItems
-    .reduce((acc, item) => acc + item.price * item.qty, 0)
-    .toFixed(2);
+  // Load cart total and item count
+  useEffect(() => {
+    const updateCartInfo = () => {
+      const cartItems = getCartItems()
+      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+      const count = getCartTotalItems()
+      setCartTotal(total)
+      setCartItemCount(count)
+    }
+
+    updateCartInfo()
+
+    // Listen for cart updates
+    window.addEventListener('cartUpdated', updateCartInfo)
+
+    return () => {
+      window.removeEventListener('cartUpdated', updateCartInfo)
+    }
+  }, [])
 
   const toggleMenu = (menu) => {
-    setOpenMenu(openMenu === menu ? null : menu);
-  };
+    setOpenMenu(openMenu === menu ? null : menu)
+  }
 
   const handleMouseEnter = (menu) => {
-    clearTimeout(hoverTimeoutRef.current);
-    setOpenMenu(menu);
-  };
+    clearTimeout(hoverTimeoutRef.current)
+    setOpenMenu(menu)
+  }
 
   const handleMouseLeave = () => {
     hoverTimeoutRef.current = setTimeout(() => {
-      setOpenMenu(null);
-    }, 200);
-  };
+      setOpenMenu(null)
+    }, 200)
+  }
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (cartOpen) return;
+      if (cartOpen) return
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
-        setOpenMenu(null);
-        setMobileOpen(false);
+        setOpenMenu(null)
+        setMobileOpen(false)
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [cartOpen]);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [cartOpen])
 
   return (
     <>
       <div className="w-full" ref={navbarRef}>
         {/* TOP NAV BAR */}
         <nav className="w-full bg-white px-6 md:px-12 py-4 flex items-center justify-between shadow-sm">
-
           {/* LOGO */}
           <div className="flex items-center gap-2">
             <GreenMartLogo />
-            <Link to="/" className="text-2xl font-poppins font-bold">Ecobazar</Link>
+            <Link to="/" className="text-2xl font-poppins font-bold">
+              Ecobazar
+            </Link>
           </div>
 
           {/* SEARCH BAR (Desktop) */}
@@ -95,15 +93,8 @@ const Navbar = () => {
 
           {/* RIGHT ICONS */}
           <div className="hidden md:flex items-center gap-8">
-
             {/* Like */}
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="black"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -113,7 +104,7 @@ const Navbar = () => {
 
             {/* Cart Button */}
             <div
-              className="flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-2 cursor-pointer relative"
               onClick={() => setCartOpen(true)}
             >
               <svg
@@ -130,34 +121,59 @@ const Navbar = () => {
                 />
               </svg>
 
+              {/* Cart Badge */}
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
+                </span>
+              )}
+
               <div className="text-sm leading-4">
                 <p className="text-gray-500">Shopping cart:</p>
-                <p className="font-semibold">${totalPrice}</p>
+                <p className="font-semibold">₹{cartTotal.toFixed(2)}</p>
               </div>
             </div>
           </div>
 
-          {/* MOBILE HAMBURGER */}
-          <button
-            className="md:hidden block"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            <svg
-              className="w-7 h-7"
-              fill="none"
-              stroke="black"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
+          {/* MOBILE ICONS */}
+          <div className="md:hidden flex items-center gap-4">
+            {/* Mobile Cart Button */}
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setCartOpen(true)}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="black"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-6-9v9"
+                />
+              </svg>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
+                </span>
+              )}
+            </div>
+            {/* Mobile Hamburger */}
+            <button onClick={() => setMobileOpen(!mobileOpen)}>
+              <svg className="w-7 h-7" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </nav>
 
         {/* MOBILE MENU */}
         <div
           className={`md:hidden bg-gray-50 border-t border-gray-200 overflow-hidden transition-all duration-300 ${
-            mobileOpen ? "max-h-[500px] py-4" : "max-h-0"
+            mobileOpen ? 'max-h-[500px] py-4' : 'max-h-0'
           }`}
         >
           <ul className="flex flex-col gap-3 px-6 text-base">
@@ -167,15 +183,15 @@ const Navbar = () => {
             <li>
               <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleMenu("shop")}
+                onClick={() => toggleMenu('shop')}
               >
                 <span>Shop</span>
-                <span className={`${openMenu === "shop" ? "rotate-180" : ""} transition-transform`}>
+                <span className={`${openMenu === 'shop' ? 'rotate-180' : ''} transition-transform`}>
                   ▼
                 </span>
               </div>
 
-              {openMenu === "shop" && (
+              {openMenu === 'shop' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
                   <p className="cursor-pointer">Shop Grid</p>
                   <p className="cursor-pointer">Product Details</p>
@@ -187,15 +203,17 @@ const Navbar = () => {
             <li>
               <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleMenu("pages")}
+                onClick={() => toggleMenu('pages')}
               >
                 <span>Pages</span>
-                <span className={`${openMenu === "pages" ? "rotate-180" : ""} transition-transform`}>
+                <span
+                  className={`${openMenu === 'pages' ? 'rotate-180' : ''} transition-transform`}
+                >
                   ▼
                 </span>
               </div>
 
-              {openMenu === "pages" && (
+              {openMenu === 'pages' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
                   <p className="cursor-pointer">FAQ</p>
                   <p className="cursor-pointer">Terms</p>
@@ -207,15 +225,15 @@ const Navbar = () => {
             <li>
               <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleMenu("blog")}
+                onClick={() => toggleMenu('blog')}
               >
                 <span>Blog</span>
-                <span className={`${openMenu === "blog" ? "rotate-180" : ""} transition-transform`}>
+                <span className={`${openMenu === 'blog' ? 'rotate-180' : ''} transition-transform`}>
                   ▼
                 </span>
               </div>
 
-              {openMenu === "blog" && (
+              {openMenu === 'blog' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
                   <p className="cursor-pointer">Blog List</p>
                   <p className="cursor-pointer">Single Post</p>
@@ -232,26 +250,33 @@ const Navbar = () => {
         <div className="hidden md:block w-full bg-gray-50 border-t border-gray-200">
           <div className="flex items-center gap-10 px-12 py-4 relative font-poppins text-2xl font-medium">
             <ul className="flex items-center gap-8 text-sm">
-
-              <Link to="/"><li className="hover:text-green-600 cursor-pointer">Home</li></Link>
+              <Link to="/">
+                <li className="hover:text-green-600 cursor-pointer">Home</li>
+              </Link>
 
               {/* SHOP */}
               <li
                 className="relative"
-                onMouseEnter={() => handleMouseEnter("shop")}
+                onMouseEnter={() => handleMouseEnter('shop')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div
                   className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                  onClick={() => toggleMenu("shop")}
+                  onClick={() => toggleMenu('shop')}
                 >
                   Shop
-                  <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg
+                    className="h-3 w-3"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
 
-                {openMenu === "shop" && (
+                {openMenu === 'shop' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
                     <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p>
                     <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Product Details</p>
@@ -262,26 +287,39 @@ const Navbar = () => {
               {/* PAGES */}
               <li
                 className="relative"
-                onMouseEnter={() => handleMouseEnter("pages")}
+                onMouseEnter={() => handleMouseEnter('pages')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div
                   className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                  onClick={() => toggleMenu("pages")}
+                  onClick={() => toggleMenu('pages')}
                 >
                   Pages
-                  <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg
+                    className="h-3 w-3"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
 
-                {openMenu === "pages" && (
+                {openMenu === 'pages' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <Link to='/cart'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Cart</p></Link>
-                    <Link to='/orders'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p></Link>
-                    <Link to='/login'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p></Link>
-                    <Link to='/register'><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p></Link>
-                    
+                    <Link to="/cart">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Cart</p>
+                    </Link>
+                    <Link to="/orders">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p>
+                    </Link>
+                    <Link to="/login">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p>
+                    </Link>
+                    <Link to="/register">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p>
+                    </Link>
                   </div>
                 )}
               </li>
@@ -289,20 +327,26 @@ const Navbar = () => {
               {/* BLOG */}
               <li
                 className="relative"
-                onMouseEnter={() => handleMouseEnter("blog")}
+                onMouseEnter={() => handleMouseEnter('blog')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div
                   className="flex items-center gap-1 cursor-pointer hover:text-green-600"
-                  onClick={() => toggleMenu("blog")}
+                  onClick={() => toggleMenu('blog')}
                 >
                   Blog
-                  <svg className="h-3 w-3" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg
+                    className="h-3 w-3"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
 
-                {openMenu === "blog" && (
+                {openMenu === 'blog' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
                     <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Blog List</p>
                     <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Single Post</p>
@@ -310,7 +354,9 @@ const Navbar = () => {
                 )}
               </li>
 
-              <Link to="/about"><li className="hover:text-green-600 cursor-pointer">About Us</li></Link>
+              <Link to="/about">
+                <li className="hover:text-green-600 cursor-pointer">About Us</li>
+              </Link>
               <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
             </ul>
           </div>
@@ -318,14 +364,9 @@ const Navbar = () => {
       </div>
 
       {/* CART POPUP */}
-      <CartPopup
-        open={cartOpen}
-        onClose={() => setCartOpen(false)}
-        items={cartItems}
-        setItems={setCartItems}
-      />
+      <CartPopup open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

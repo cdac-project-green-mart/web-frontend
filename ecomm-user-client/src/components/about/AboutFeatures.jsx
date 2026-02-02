@@ -1,29 +1,29 @@
-import React from "react";
-import aboutImage from "../../assets/farmer-image.png";
+import React from 'react'
+import aboutImage from '../../assets/farmer-image.png'
 
 export default function AboutFeatures() {
   const features = [
     {
-      title: "100% Organic food",
-      desc: "100% healthy & Fresh food.",
-      icon: "🌱",
+      title: '100% Organic food',
+      desc: '100% healthy & Fresh food.',
+      icon: '🌱',
     },
     {
-      title: "Great Support 24/7",
-      desc: "Instant access to Contact",
-      icon: "🎧",
+      title: 'Great Support 24/7',
+      desc: 'Instant access to Contact',
+      icon: '🎧',
     },
     {
-      title: "Customer Feedback",
-      desc: "Our happy customer",
-      icon: "⭐",
+      title: 'Customer Feedback',
+      desc: 'Our happy customer',
+      icon: '⭐',
     },
     {
-      title: "100% Secure Payment",
-      desc: "We ensure your money is safe",
-      icon: "💳",
+      title: '100% Secure Payment',
+      desc: 'We ensure your money is safe',
+      icon: '💳',
     },
-  ];
+  ]
 
   return (
     <section className="bg-[#FAFAFA] p-0 m-0 w-full">
@@ -32,11 +32,7 @@ export default function AboutFeatures() {
 
         {/* LEFT IMAGE - flush to the left */}
         <div className="w-full h-full">
-          <img
-            src={aboutImage}
-            alt="About Features"
-            className="w-full h-full object-cover"
-          />
+          <img src={aboutImage} alt="About Features" className="w-full h-full object-cover" />
         </div>
 
         {/* RIGHT CONTENT */}
@@ -48,13 +44,13 @@ export default function AboutFeatures() {
             </h2>
 
             <p className="text-[#4A4A4A] mb-8">
-               At our organic food store, we believe healthy living begins with clean and natural 
-  ingredients. That’s why we work closely with certified farmers who grow produce 
-  without pesticides, chemicals, or artificial enhancers. Every product we offer is 
-  hand-picked for freshness, nutritional value, and authentic farm-to-table taste. 
-  Your wellness is our priority, and we proudly ensure transparency, quality, and 
-  sustainability in everything we deliver.
-       </p>
+              At our organic food store, we believe healthy living begins with clean and natural
+              ingredients. That’s why we work closely with certified farmers who grow produce
+              without pesticides, chemicals, or artificial enhancers. Every product we offer is
+              hand-picked for freshness, nutritional value, and authentic farm-to-table taste. Your
+              wellness is our priority, and we proudly ensure transparency, quality, and
+              sustainability in everything we deliver.
+            </p>
 
             {/* FEATURES GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -79,5 +75,5 @@ export default function AboutFeatures() {
 
       </div>
     </section>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import React from "react";
-import googlePlaylogo from "../../assets/google-play-brands-solid.svg"
-import applelogo from "../../assets/apple-brands-solid.svg"
-import {Link} from "react-router-dom"
+import React from 'react'
+import googlePlaylogo from '../../assets/google-play-brands-solid.svg'
+import applelogo from '../../assets/apple-brands-solid.svg'
+import { Link } from 'react-router-dom'
 const Footer = () => {
   return (
     <footer className="w-full bg-gray-100 pt-10">
@@ -17,18 +17,14 @@ const Footer = () => {
           </div>
 
           <p className="text-gray-600 text-sm leading-6 max-w-xs">
-            Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui,
-            eget bibendum magna congue nec.
+            Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum
+            magna congue nec.
           </p>
 
           <div className="flex items-center gap-4 text-sm">
-            <p className="border-b-2 border-green-600 pb-1 cursor-pointer">
-              (219) 555–0114
-            </p>
+            <p className="border-b-2 border-green-600 pb-1 cursor-pointer">(219) 555–0114</p>
             <span>or</span>
-            <p className="border-b-2 border-green-600 pb-1 cursor-pointer">
-              Proxy@gmail.com
-            </p>
+            <p className="border-b-2 border-green-600 pb-1 cursor-pointer">Proxy@gmail.com</p>
           </div>
         </div>
 
@@ -36,9 +32,15 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">My Account</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">My Account</li>
-            <li className="hover:text-green-600 cursor-pointer">Order History</li>
-            <li className="hover:text-green-600 cursor-pointer">Shopping Cart</li>
+            <li className="hover:text-green-600">
+              <Link to="/account">My Account</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/orders">Order History</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/cart">Shopping Cart</Link>
+            </li>
             <li className="hover:text-green-600 cursor-pointer">Wishlist</li>
           </ul>
         </div>
@@ -47,7 +49,9 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Helps</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">Contact</li>
+            <li className="hover:text-green-600">
+              <Link to="/contact">Contact</Link>
+            </li>
             <li className="hover:text-green-600 cursor-pointer">Faqs</li>
             <li className="hover:text-green-600 cursor-pointer">Terms & Condition</li>
             <li className="hover:text-green-600 cursor-pointer">Privacy Policy</li>
@@ -58,10 +62,18 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Proxy</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer"><Link to="/about">About</Link></li>
-            <li className="hover:text-green-600 cursor-pointer">Shop</li>
-            <li className="hover:text-green-600 cursor-pointer">Product</li>
-            <li className="hover:text-green-600 cursor-pointer">Track Order</li>
+            <li className="hover:text-green-600">
+              <Link to="/about">About</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/products">Shop</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/products">Product</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/orders">Track Order</Link>
+            </li>
           </ul>
         </div>
 
@@ -73,7 +85,9 @@ const Footer = () => {
 
             {/* App Store Button */}
             <div className="flex items-center gap-3 bg-white border rounded-md px-4 py-3 shadow-sm cursor-pointer">
-              <div className="w-6 h-6"><img src={applelogo} alt="" /></div>
+              <div className="w-6 h-6">
+                <img src={applelogo} alt="" />
+              </div>
               <div className="text-sm">
                 <p className="text-gray-500 leading-none">Download on the</p>
                 <p className="leading-none font-semibold">App Store</p>
@@ -82,7 +96,9 @@ const Footer = () => {
 
             {/* Google Play Button */}
             <div className="flex items-center gap-3 bg-white border rounded-md px-4 py-3 shadow-sm cursor-pointer">
-              <div className="w-6 h-6"><img src={googlePlaylogo} alt="" /></div>
+              <div className="w-6 h-6">
+                <img src={googlePlaylogo} alt="" />
+              </div>
               <div className="text-sm">
                 <p className="text-gray-500 leading-none">Download on the</p>
                 <p className="leading-none font-semibold">Google Play</p>
@@ -95,10 +111,7 @@ const Footer = () => {
 
       {/* FOOTER BOTTOM BAR */}
       <div className="w-full bg-white border-t py-4 px-24 flex items-center justify-between flex-wrap">
-
-        <p className="text-gray-600 text-sm">
-          Ecobazar eCommerce © 2021. All Rights Reserved
-        </p>
+        <p className="text-gray-600 text-sm">Ecobazar eCommerce © 2021. All Rights Reserved</p>
 
         <div className="flex items-center gap-3 mt-3 md:mt-0">
           <div className="bg-gray-200 px-3 py-1 rounded text-xs">Apple Pay</div>
@@ -110,7 +123,7 @@ const Footer = () => {
 
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
