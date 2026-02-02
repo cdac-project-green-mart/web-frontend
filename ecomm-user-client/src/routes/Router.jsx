@@ -9,6 +9,7 @@ import Orders from '../pages/Orders.jsx'
 import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
 import About from '../pages/About.jsx'
+import HelpPage from '../pages/HelpPage.jsx'
 
 /**
  * User Client Router
@@ -29,6 +30,7 @@ export default function Router() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
+        <Route path="help" element={<HelpPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

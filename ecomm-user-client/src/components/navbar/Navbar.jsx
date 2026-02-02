@@ -198,7 +198,7 @@ const Navbar = () => {
               {openMenu === "pages" && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
                   {/* No routes for FAQ/Terms yet */}
-                  <p className="cursor-pointer text-gray-400">FAQ (N/A)</p>
+                  <Link to="/help"><p className="cursor-pointer">FAQ</p></Link>
                   <p className="cursor-pointer text-gray-400">Terms (N/A)</p>
                 </div>
               )}
@@ -313,7 +313,7 @@ const Navbar = () => {
               </li>
 
               <Link to="/about"><li className="hover:text-green-600 cursor-pointer">About Us</li></Link>
-              <li className="hover:text-green-600 cursor-pointer text-gray-400">Contact Us (N/A)</li>
+              <Link to="/help"><li className="hover:text-green-600 cursor-pointer">Contact Us</li></Link>
             </ul>
           </div>
         </div>
