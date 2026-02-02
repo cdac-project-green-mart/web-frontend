@@ -207,7 +207,7 @@ export default function VendorOrders() {
 
                 <td className="p-3">{order.product}</td>
                 <td className="p-3 text-blue-600">
-                  <Link to={`/vendor/order-details/${order.id}`} className="hover:underline">
+                  <Link to={`/order-details/${order.id}`} className="hover:underline">
                     #{order.id}
                   </Link>
                 </td>
@@ -257,7 +257,7 @@ export default function VendorOrders() {
                       {activeTab === 'shipped' && (
                         <>
                           <Link
-                            to={`/vendor/order-details/${order.id}`}
+                            to={`/order-details/${order.id}`}
                             className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
                           >
                             View Details

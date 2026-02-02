@@ -184,7 +184,7 @@ export default function VendorPayments() {
                     />
                   </td>
                   <td className="p-4 align-middle text-gray-500 font-medium">
-                    <Link to={`/vendor/order-details/${p.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
+                    <Link to={`/order-details/${p.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
                       {p.orderId}
                     </Link>
                   </td>

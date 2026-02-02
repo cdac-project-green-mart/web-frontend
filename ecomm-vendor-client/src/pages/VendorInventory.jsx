@@ -104,7 +104,7 @@ export default function VendorInventory() {
           <button className="px-4 py-2 border border-gray-300 rounded bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-medium">
             Export
           </button>
-          <Link to="/vendor/add-product">
+          <Link to="/add-product">
             <button className="px-4 py-2 border border-gray-800 rounded bg-white text-gray-800 hover:bg-gray-50 text-sm font-semibold">
               + Add Product
             </button>

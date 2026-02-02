@@ -114,7 +114,7 @@ export default function VendorDashboard() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-800">Recent Orders</h2>
-          <Link to="/vendor/orders" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/orders" className="text-sm text-gray-500 hover:text-gray-700">
             View All
           </Link>
         </div>
@@ -132,7 +132,7 @@ export default function VendorDashboard() {
             {recentOrders.map((order) => (
               <tr key={order.orderId} className="border-t border-gray-100">
                 <td className="py-3 text-gray-700">
-                  <Link to={`/vendor/order-details/${order.orderId}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                  <Link to={`/order-details/${order.orderId}`} className="text-blue-600 hover:text-blue-800 hover:underline">
                     {order.orderId}
                   </Link>
                 </td>
@@ -152,7 +152,7 @@ export default function VendorDashboard() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-800">Top Products</h2>
-          <Link to="/vendor/inventory" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/inventory" className="text-sm text-gray-500 hover:text-gray-700">
             View Inventory
           </Link>
         </div>

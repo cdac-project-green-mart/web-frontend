@@ -189,7 +189,7 @@ export default function VendorReturns() {
                   </div>
                 </td>
                 <td className="p-4 align-middle">
-                  <Link to={`/vendor/order-details/${item.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
+                  <Link to={`/order-details/${item.orderId.replace('#', '')}`} className="text-blue-500 hover:underline">
                     {item.orderId}
                   </Link>
                 </td>
