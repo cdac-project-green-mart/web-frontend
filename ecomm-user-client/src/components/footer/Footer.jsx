@@ -32,9 +32,15 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">My Account</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">My Account</li>
-            <li className="hover:text-green-600 cursor-pointer">Order History</li>
-            <li className="hover:text-green-600 cursor-pointer">Shopping Cart</li>
+            <li className="hover:text-green-600">
+              <Link to="/account">My Account</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/orders">Order History</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/cart">Shopping Cart</Link>
+            </li>
             <li className="hover:text-green-600 cursor-pointer">Wishlist</li>
           </ul>
         </div>
@@ -43,7 +49,9 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Helps</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">Contact</li>
+            <li className="hover:text-green-600">
+              <Link to="/contact">Contact</Link>
+            </li>
             <li className="hover:text-green-600 cursor-pointer">Faqs</li>
             <li className="hover:text-green-600 cursor-pointer">Terms & Condition</li>
             <li className="hover:text-green-600 cursor-pointer">Privacy Policy</li>
@@ -54,12 +62,18 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Proxy</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">
+            <li className="hover:text-green-600">
               <Link to="/about">About</Link>
             </li>
-            <li className="hover:text-green-600 cursor-pointer">Shop</li>
-            <li className="hover:text-green-600 cursor-pointer">Product</li>
-            <li className="hover:text-green-600 cursor-pointer">Track Order</li>
+            <li className="hover:text-green-600">
+              <Link to="/products">Shop</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/products">Product</Link>
+            </li>
+            <li className="hover:text-green-600">
+              <Link to="/orders">Track Order</Link>
+            </li>
           </ul>
         </div>
 

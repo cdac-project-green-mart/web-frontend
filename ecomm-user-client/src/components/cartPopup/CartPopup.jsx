@@ -4,6 +4,7 @@ import {
   getCartItems,
   updateCartQuantity,
   removeFromCart,
+  isLoggedIn,
 } from '../../utils/cartUtils'
 import { getStockForProducts } from '../../api/inventoryApi'
 
@@ -164,12 +165,23 @@ export default function CartPopup({ open, onClose }) {
           </div>
 
           <div className="flex flex-col gap-3">
-            <button className="cursor-pointer bg-green-600 text-white py-3 rounded-full font-semibold text-[15px]">
+            <button
+              onClick={() => {
+                onClose()
+                if (isLoggedIn()) {
+                  navigate('/checkout')
+                } else {
+                  navigate('/login', { state: { from: '/checkout' } })
+                }
+              }}
+              className="cursor-pointer bg-green-600 text-white py-3 rounded-full font-semibold text-[15px]"
+            >
               Checkout
             </button>
 
             <Link
               to="/cart"
+              onClick={onClose}
               className="text-center cursor-pointer bg-green-100 text-green-700 py-3 rounded-full font-semibold text-[15px]"
             >
               Go To Cart
