@@ -20,7 +20,7 @@ export default function VendorHeader() {
   const handleSignOut = () => {
     localStorage.removeItem('vendorToken')
     localStorage.removeItem('vendorData')
-    navigate('/vendor/login')
+    navigate('/login')
   }
 
   return (
@@ -69,7 +69,7 @@ export default function VendorHeader() {
               <button
                 onClick={() => {
                   setIsDropdownOpen(false)
-                  navigate('/vendor/profile')
+                  navigate('/profile')
                 }}
                 className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >
@@ -86,7 +86,7 @@ export default function VendorHeader() {
               <button
                 onClick={() => {
                   setIsDropdownOpen(false)
-                  navigate('/vendor/settings', { state: { fromDropdown: true } })
+                  navigate('/settings', { state: { fromDropdown: true } })
                 }}
                 className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >

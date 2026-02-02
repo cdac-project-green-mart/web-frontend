@@ -10,20 +10,12 @@ import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
 import About from '../pages/About.jsx'
 
-// Vendor imports
-import VendorLayout from '../vendor/components/layout/VendorLayout.jsx'
-import VendorDashboard from '../vendor/pages/VendorDashboard.jsx'
-import VendorInventory from '../vendor/pages/VendorInventory.jsx'
-import VendorAddProduct from '../vendor/pages/VendorAddProduct.jsx'
-import VendorOrders from '../vendor/pages/VendorOrders.jsx'
-import VendorOrderDetails from '../vendor/pages/VendorOrderDetails.jsx'
-import VendorReturns from '../vendor/pages/VendorReturns.jsx'
-import VendorPayments from '../vendor/pages/VendorPayments.jsx'
-import VendorReports from '../vendor/pages/VendorReports.jsx'
-import VendorLogin from '../vendor/pages/VendorLogin.jsx'
-import VendorRegister from '../vendor/pages/VendorRegister.jsx'
-import VendorSettings from '../vendor/pages/VendorSettings.jsx'
-
+/**
+ * User Client Router
+ * 
+ * Note: Vendor routes have been moved to ecomm-vendor-client.
+ * This router now only handles user-facing routes.
+ */
 export default function Router() {
   return (
     <Routes>
@@ -38,22 +30,6 @@ export default function Router() {
         <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
         <Route path="*" element={<NotFound />} />
-      </Route>
-
-      {/* Vendor Routes */}
-      <Route path="/vendor/login" element={<VendorLogin />} />
-      <Route path="/vendor/register" element={<VendorRegister />} />
-      <Route path="/vendor" element={<VendorLayout />}>
-        <Route index element={<VendorDashboard />} />
-        <Route path="dashboard" element={<VendorDashboard />} />
-        <Route path="inventory" element={<VendorInventory />} />
-        <Route path="add-product" element={<VendorAddProduct />} />
-        <Route path="orders" element={<VendorOrders />} />
-        <Route path="order-details/:id" element={<VendorOrderDetails />} />
-        <Route path="returns" element={<VendorReturns />} />
-        <Route path="payments" element={<VendorPayments />} />
-        <Route path="reports" element={<VendorReports />} />
-        <Route path="settings" element={<VendorSettings />} />
       </Route>
     </Routes>
   )

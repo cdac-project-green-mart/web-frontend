@@ -1,12 +1,12 @@
 import { NavLink, useLocation } from 'react-router-dom'
 
 const navItems = [
-  { name: 'Dashboard', path: '/vendor/dashboard' },
-  { name: 'Inventory', path: '/vendor/inventory' },
-  { name: 'Orders', path: '/vendor/orders' },
-  { name: 'Returns', path: '/vendor/returns' },
-  { name: 'Payments', path: '/vendor/payments' },
-  { name: 'Reports', path: '/vendor/reports' },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Inventory', path: '/inventory' },
+  { name: 'Orders', path: '/orders' },
+  { name: 'Returns', path: '/returns' },
+  { name: 'Payments', path: '/payments' },
+  { name: 'Reports', path: '/reports' },
 ]
 
 export default function VendorSidebar() {
@@ -23,8 +23,7 @@ export default function VendorSidebar() {
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
-                  `block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ${
-                    isActive ? 'bg-gray-100 font-medium' : ''
+                  `block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ${isActive ? 'bg-gray-100 font-medium' : ''
                   }`
                 }
               >
@@ -36,10 +35,9 @@ export default function VendorSidebar() {
           {isSettingsAccessedFromDropdown && (
             <li>
               <NavLink
-                to="/vendor/settings"
+                to="/settings"
                 className={({ isActive }) =>
-                  `block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ${
-                    isActive ? 'bg-gray-100 font-medium' : ''
+                  `block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ${isActive ? 'bg-gray-100 font-medium' : ''
                   }`
                 }
               >
