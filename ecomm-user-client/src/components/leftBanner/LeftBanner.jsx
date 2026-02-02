@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import heroImage from "../../assets/banner-img.jpg";
 
 export default function LeftHeroBanner() {
@@ -28,9 +29,11 @@ export default function LeftHeroBanner() {
 
         <p className="opacity-90 text-sm">Free shipping on all your order.</p>
 
-        <button className="bg-white text-[#00B207] px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition cursor-pointer">
-          Shop now →
-        </button>
+        <Link to="/products">
+          <button className="bg-white text-[#00B207] px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition cursor-pointer">
+            Shop now →
+          </button>
+        </Link>
 
       </div>
     </div>

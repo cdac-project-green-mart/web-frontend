@@ -1,7 +1,7 @@
 import React from "react";
 import googlePlaylogo from "../../assets/google-play-brands-solid.svg"
 import applelogo from "../../assets/apple-brands-solid.svg"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 const Footer = () => {
   return (
     <footer className="w-full bg-gray-100 pt-10">
@@ -36,10 +36,10 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">My Account</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">My Account</li>
-            <li className="hover:text-green-600 cursor-pointer">Order History</li>
-            <li className="hover:text-green-600 cursor-pointer">Shopping Cart</li>
-            <li className="hover:text-green-600 cursor-pointer">Wishlist</li>
+            <Link to="/orders"><li className="hover:text-green-600 cursor-pointer">My Account</li></Link>
+            <Link to="/orders"><li className="hover:text-green-600 cursor-pointer">Order History</li></Link>
+            <Link to="/cart"><li className="hover:text-green-600 cursor-pointer">Shopping Cart</li></Link>
+            <li className="hover:text-green-600 cursor-pointer text-gray-400">Wishlist (N/A)</li>
           </ul>
         </div>
 
@@ -47,10 +47,10 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Helps</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer">Contact</li>
-            <li className="hover:text-green-600 cursor-pointer">Faqs</li>
-            <li className="hover:text-green-600 cursor-pointer">Terms & Condition</li>
-            <li className="hover:text-green-600 cursor-pointer">Privacy Policy</li>
+            <li className="hover:text-green-600 cursor-pointer text-gray-400">Contact (N/A)</li>
+            <li className="hover:text-green-600 cursor-pointer text-gray-400">Faqs (N/A)</li>
+            <li className="hover:text-green-600 cursor-pointer text-gray-400">Terms & Condition (N/A)</li>
+            <li className="hover:text-green-600 cursor-pointer text-gray-400">Privacy Policy (N/A)</li>
           </ul>
         </div>
 
@@ -58,10 +58,10 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-lg mb-4">Proxy</h4>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li className="hover:text-green-600 cursor-pointer"><Link to="/about"><li className="hover:text-green-600 cursor-pointer">About</li></Link></li>
-            <li className="hover:text-green-600 cursor-pointer">Shop</li>
-            <li className="hover:text-green-600 cursor-pointer">Product</li>
-            <li className="hover:text-green-600 cursor-pointer">Track Order</li>
+            <Link to="/about"><li className="hover:text-green-600 cursor-pointer">About</li></Link>
+            <Link to="/products"><li className="hover:text-green-600 cursor-pointer">Shop</li></Link>
+            <Link to="/products"><li className="hover:text-green-600 cursor-pointer">Product</li></Link>
+            <Link to="/orders"><li className="hover:text-green-600 cursor-pointer">Track Order</li></Link>
           </ul>
         </div>
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import CategoryCard from "./CategoryCard";
 
 import freshFruit from "../../assets/fresh-fruit.png";
@@ -37,9 +38,11 @@ export default function PopularCategories() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[22px] font-semibold">Popular Categories</h2>
-          <button className="cursor-pointer text-green-600 font-medium hover:underline flex items-center gap-1">
-            View All →
-          </button>
+          <Link to="/products">
+            <button className="cursor-pointer text-green-600 font-medium hover:underline flex items-center gap-1">
+              View All →
+            </button>
+          </Link>
         </div>
 
         {/* Categories Grid */}

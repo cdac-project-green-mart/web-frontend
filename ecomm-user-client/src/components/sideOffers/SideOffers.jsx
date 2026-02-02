@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import bagImage from "../../assets/vegetable-bag.jpg";
 import greenLeaves from "../../assets/side-offer.png";
 
@@ -20,9 +21,11 @@ export default function SideOffers() {
           <p className="text-sm text-gray-500">SUMMER SALE</p>
           <h2 className="text-2xl font-bold">75% OFF</h2>
           <p className="text-sm text-gray-600 mb-3">Only Fruit & Vegetable</p>
-          <button className="text-green-700 font-semibold hover:underline cursor-pointer">
-            Shop Now →
-          </button>
+          <Link to="/products">
+            <button className="text-green-700 font-semibold hover:underline cursor-pointer">
+              Shop Now →
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -40,9 +43,11 @@ export default function SideOffers() {
           <h2 className="text-xl font-bold leading-tight">
             Special Products <br /> Deal of the Month
           </h2>
-          <button className="text-green-300 mt-3 font-semibold hover:underline cursor-pointer">
-            Shop Now →
-          </button>
+          <Link to="/products">
+            <button className="text-green-300 mt-3 font-semibold hover:underline cursor-pointer">
+              Shop Now →
+            </button>
+          </Link>
         </div>
       </div>
 

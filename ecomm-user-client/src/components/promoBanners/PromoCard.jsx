@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function PromoCard({
     bgImage,
@@ -58,9 +59,11 @@ export default function PromoCard({
                 )}
 
                 {/* Button */}
-                <button className="cursor-pointer mt-5 bg-white text-green-600 font-medium px-6 py-2 rounded-full hover:bg-gray-100 transition">
-                    Shop Now →
-                </button>
+                <Link to="/products">
+                    <button className="cursor-pointer mt-5 bg-white text-green-600 font-medium px-6 py-2 rounded-full hover:bg-gray-100 transition">
+                        Shop Now →
+                    </button>
+                </Link>
 
             </div>
         </div>
