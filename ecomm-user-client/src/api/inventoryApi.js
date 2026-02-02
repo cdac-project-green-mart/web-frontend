@@ -1,16 +1,9 @@
-import axios from 'axios';
-
-
-const inventoryApi = axios.create({
-  baseURL: '/inventory', 
-  timeout: 10000,
-  headers: { 'Content-Type': 'application/json' },
-});
+import api from './axios';
 
 
 export const getStock = async (productId) => {
   try {
-    const { data } = await inventoryApi.get(`/${String(productId)}`);
+    const { data } = await api.get(`/inventory/${String(productId)}`);
     return data;
   } catch (err) {
     if (err.response?.status === 404) return null;
@@ -36,7 +29,7 @@ export const getStockForProducts = async (productIds) => {
 
 
 export const decreaseStock = async (productId, quantity) => {
-  const { data } = await inventoryApi.post(`/${String(productId)}/decrease`, {
+  const { data } = await api.post(`/inventory/${String(productId)}/decrease`, {
     quantity,
   });
   return data;
@@ -44,7 +37,7 @@ export const decreaseStock = async (productId, quantity) => {
 
 
 export const increaseStock = async (productId, quantity) => {
-  const { data } = await inventoryApi.post(`/${String(productId)}/increase`, {
+  const { data } = await api.post(`/inventory/${String(productId)}/increase`, {
     quantity,
   });
   return data;
@@ -53,7 +46,7 @@ export const increaseStock = async (productId, quantity) => {
 
 export const getLowStockAlerts = async () => {
   try {
-    const { data } = await inventoryApi.get('/alerts/low-stock');
+    const { data } = await api.get('/inventory/alerts/low-stock');
     return data;
   } catch (err) {
     console.error('[inventoryApi] getLowStockAlerts:', err);
