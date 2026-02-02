@@ -39,14 +39,14 @@ const OrderStatusTracker = ({ statusStep }) => {
                 className={`w-10 h-10 flex items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm ${
                   isCompleted || isActive
                     ? 'bg-green-500 border-green-500 text-white'
-                    : 'border-dashed border-green-500 text-green-500 bg-white'
+                    : 'bg-gray-100 border-gray-200 text-gray-500'
                 }`}
               >
                 {isCompleted ? '✓' : step.id.toString().padStart(2, '0')}
               </div>
               <span
                 className={`mt-2 text-xs ${
-                  isCompleted || isActive ? 'text-green-600' : 'text-gray-400'
+                  isCompleted || isActive ? 'text-green-600' : 'text-gray-500'
                 }`}
               >
                 {step.label}
