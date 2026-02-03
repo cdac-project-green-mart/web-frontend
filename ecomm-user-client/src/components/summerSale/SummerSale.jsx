@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import promoImg from "../../assets/promo-banner.jpg";
 
 export default function SummerSale() {
@@ -25,9 +26,11 @@ export default function SummerSale() {
             money-back guarantee
           </p>
 
-          <button className="cursor-pointer mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition">
-            Shop Now →
-          </button>
+          <Link to="/products">
+            <button className="cursor-pointer mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition">
+              Shop Now →
+            </button>
+          </Link>
         </div>
       </div>
     </div>

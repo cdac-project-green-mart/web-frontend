@@ -105,3 +105,27 @@ export const updateCartQuantity = async (productId, quantity) => {
 
 export const getCartTotalItems = () =>
   getCartItems().reduce((n, i) => n + i.quantity, 0);
+
+/**
+ * Check if user is logged in by verifying token in localStorage
+ */
+export const isLoggedIn = () => {
+  const token = localStorage.getItem('token');
+  return !!token;
+};
+
+/**
+ * Merge guest cart with user cart after login.
+ * Currently clears the guest cart as the backend handles user cart persistence.
+ */
+export const mergeGuestCartToUser = () => {
+  // Guest cart items are stored in localStorage
+  // After login, the user's cart will be managed by the backend
+  // Clear the guest cart from localStorage
+  try {
+    localStorage.removeItem('cart');
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
+  } catch (e) {
+    console.error('cartUtils.mergeGuestCartToUser:', e);
+  }
+};

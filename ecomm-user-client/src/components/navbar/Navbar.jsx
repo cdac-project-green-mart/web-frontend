@@ -172,12 +172,11 @@ const Navbar = () => {
 
         {/* MOBILE MENU */}
         <div
-          className={`md:hidden bg-gray-50 border-t border-gray-200 overflow-hidden transition-all duration-300 ${
-            mobileOpen ? 'max-h-[500px] py-4' : 'max-h-0'
-          }`}
+          className={`md:hidden bg-gray-50 border-t border-gray-200 overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-[500px] py-4" : "max-h-0"
+            }`}
         >
           <ul className="flex flex-col gap-3 px-6 text-base">
-            <li className="cursor-pointer">Home</li>
+            <Link to="/"><li className="cursor-pointer">Home</li></Link>
 
             {/* SHOP */}
             <li>
@@ -193,8 +192,9 @@ const Navbar = () => {
 
               {openMenu === 'shop' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
-                  <p className="cursor-pointer">Shop Grid</p>
-                  <p className="cursor-pointer">Product Details</p>
+                  <Link to="/products"><p className="cursor-pointer">Shop Grid</p></Link>
+                  {/* Product Details - No specific ID to link to yet */}
+                  <p className="cursor-pointer text-gray-400">Product Details (N/A)</p>
                 </div>
               )}
             </li>
@@ -215,8 +215,9 @@ const Navbar = () => {
 
               {openMenu === 'pages' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
-                  <p className="cursor-pointer">FAQ</p>
-                  <p className="cursor-pointer">Terms</p>
+                  {/* No routes for FAQ/Terms yet */}
+                  <Link to="/help"><p className="cursor-pointer">FAQ</p></Link>
+                  <p className="cursor-pointer text-gray-400">Terms (N/A)</p>
                 </div>
               )}
             </li>
@@ -235,14 +236,15 @@ const Navbar = () => {
 
               {openMenu === 'blog' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
-                  <p className="cursor-pointer">Blog List</p>
-                  <p className="cursor-pointer">Single Post</p>
+                  {/* No routes for Blog yet */}
+                  <p className="cursor-pointer text-gray-400">Blog List (N/A)</p>
+                  <p className="cursor-pointer text-gray-400">Single Post (N/A)</p>
                 </div>
               )}
             </li>
 
-            <li className="cursor-pointer">About Us</li>
-            <li className="cursor-pointer">Contact Us</li>
+            <Link to="/about"><li className="cursor-pointer">About Us</li></Link>
+            <li className="cursor-pointer text-gray-400">Contact Us (N/A)</li>
           </ul>
         </div>
 
@@ -278,8 +280,8 @@ const Navbar = () => {
 
                 {openMenu === 'shop' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Product Details</p>
+                    <Link to="/products"><p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p></Link>
+                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-400">Product Details (N/A)</p>
                   </div>
                 )}
               </li>
@@ -348,8 +350,8 @@ const Navbar = () => {
 
                 {openMenu === 'blog' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Blog List</p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Single Post</p>
+                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-400">Blog List (N/A)</p>
+                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-400">Single Post (N/A)</p>
                   </div>
                 )}
               </li>

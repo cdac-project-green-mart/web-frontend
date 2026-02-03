@@ -11,11 +11,20 @@ import OrderDetails from '../pages/OrderDetails.jsx'
 import Layout from '../components/layout/Layout.jsx'
 import NotFound from '../pages/NotFound.jsx'
 import About from '../pages/About.jsx'
+import HelpPage from '../pages/HelpPage.jsx'
+
+/**
+ * User Client Router
+ * 
+ * Note: Vendor routes have been moved to ecomm-vendor-client.
+ * This router now only handles user-facing routes.
+ */
 
 import ProductDetails from '../pages/ProductDetails.jsx';
 export default function Router() {
   return (
     <Routes>
+      {/* User Routes */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
@@ -28,6 +37,7 @@ export default function Router() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
+        <Route path="help" element={<HelpPage />} />
        
         <Route path="*" element={<NotFound />} />
       </Route>
