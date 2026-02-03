@@ -36,3 +36,16 @@ export async function validateToken() {
     return null;
   }
 }
+
+export async function logout() {
+  try {
+    // Inform backend (optional) and then clear local storage
+    await api.post(`${AUTH_BASE}/logout`);
+  } catch (err) {
+    // ignore network errors during logout
+  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("userName");
+}
