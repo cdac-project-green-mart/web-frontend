@@ -26,7 +26,7 @@ const OrderSummaryCard = ({
       <div className="space-y-2 text-sm text-gray-700">
         <div className="flex justify-between">
           <span>Subtotal:</span>
-          <span className="font-medium">${subtotal.toFixed(2)}</span>
+          <span className="font-medium">₹{subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
           <span>Discount:</span>
@@ -39,7 +39,7 @@ const OrderSummaryCard = ({
         <hr className="my-2 border-gray-100" />
         <div className="flex justify-between items-center">
           <span className="text-gray-800 font-semibold">Total</span>
-          <span className="text-green-600 font-bold text-lg">${total.toFixed(2)}</span>
+          <span className="text-green-600 font-bold text-lg">₹{total.toFixed(2)}</span>
         </div>
       </div>
     </div>

@@ -1,12 +1,5 @@
-import './App.css'
-import Layout from "./components/layout/Layout";
+import Router from "./routes/Router";
 
-function App() {
-  return (
-    <>
-      <Layout/>
-    </>
-  )
+export default function App() {
+  return <Router />;
 }
-
-export default App

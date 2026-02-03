@@ -6,7 +6,6 @@ import greenLeaves from "../../assets/side-offer.png";
 export default function SideOffers() {
   return (
     <div className="flex flex-col gap-6">
-
       {/* TOP OFFER */}
       <div
         className="relative rounded-2xl h-[230px] overflow-hidden p-6 bg-white w-full"
@@ -34,8 +33,8 @@ export default function SideOffers() {
         className="rounded-2xl p-6 h-[230px] text-white flex items-center justify-between"
         style={{
           backgroundImage: `url(${greenLeaves})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         <div>
@@ -50,7 +49,6 @@ export default function SideOffers() {
           </Link>
         </div>
       </div>
-
     </div>
-  );
+  )
 }
