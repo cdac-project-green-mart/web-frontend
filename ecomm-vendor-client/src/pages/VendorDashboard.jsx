@@ -1,35 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-// Mock Data
-const mockDashboardStats = {
-  totalOrders: 45,
-  totalEarnings: 28400,
-  pendingShipments: 12,
-  returnRate: 2.4,
-}
-
-const mockSalesData = {
-  totalRevenue: 145000,
-}
-
-const mockRecentOrders = [
-  { orderId: '12345', product: 'Blue T-Shirt', customer: 'Rohan S.', date: '05 Oct', amount: 499 },
-  { orderId: '12346', product: 'Arjun Mug', customer: 'Arjun P.', date: '05 Oct', amount: 299 },
-  { orderId: '12647', product: 'Notebook', customer: 'Neha R.', date: '06 Oct', amount: 149 },
-]
-
-const mockTopProducts = [
-  { product: 'Blue T-Shirt', units: 340, revenue: 123000 },
-  { product: 'Coffee Mug', units: 210, revenue: 62000 },
-  { product: 'Notebook', units: 150, revenue: 28000 },
-]
-
-const mockAlerts = [
-  { id: 1, message: '3 products low on stock' },
-  { id: 2, message: 'Payout ₹45,000 scheduled for 10 Oct 2025' },
-  { id: 3, message: '2 new returns pending review' },
-]
+import { getVendorOrders } from '../api/orders'
+import { getVendorProducts } from '../api/products'
+import { getPaymentHistory } from '../api/payments'
+import { getInventory } from '../api/inventory'
 
 export default function VendorDashboard() {
   const [stats, setStats] = useState(null)
@@ -41,16 +15,103 @@ export default function VendorDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true)
+    const fetchDashboardData = async () => {
+      setLoading(true)
+      try {
+        // Fetch all data in parallel
+        const [orders, products, payments] = await Promise.all([
+          getVendorOrders().catch(() => []),
+          getVendorProducts().catch(() => []),
+          getPaymentHistory().catch(() => [])
+        ])
 
-    setTimeout(() => {
-      setStats(mockDashboardStats)
-      setSalesData(mockSalesData)
-      setRecentOrders(mockRecentOrders)
-      setTopProducts(mockTopProducts)
-      setAlerts(mockAlerts)
-      setLoading(false)
-    }, 300)
+        // Calculate stats from real data
+        const totalOrders = orders.length
+        const completedPayments = payments.filter(p => p.status === 'COMPLETED')
+        const refundedPayments = payments.filter(p => p.status === 'REFUNDED')
+        const totalEarnings = completedPayments.reduce((sum, p) => sum + Number(p.amount || 0), 0)
+        const pendingShipments = orders.filter(o => o.status === 'PENDING' || o.status === 'CONFIRMED').length
+        const returnRate = totalOrders > 0 ? ((refundedPayments.length / totalOrders) * 100).toFixed(1) : 0
+
+        setStats({
+          totalOrders,
+          totalEarnings,
+          pendingShipments,
+          returnRate: Number(returnRate)
+        })
+
+        // Calculate total revenue
+        setSalesData({
+          totalRevenue: totalEarnings
+        })
+
+        // Recent orders (last 5)
+        const sortedOrders = [...orders].sort((a, b) =>
+          new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        ).slice(0, 5)
+
+        setRecentOrders(sortedOrders.map(o => ({
+          orderId: o.id || o.orderId,
+          product: o.items?.[0]?.name || 'Order',
+          customer: o.customerName || o.userId?.slice(0, 8) || 'Customer',
+          date: o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—',
+          amount: Number(o.totalAmount || o.amount || 0)
+        })))
+
+        // Top products (just show products, we don't have sales data per product)
+        const productsWithStock = await Promise.all(
+          products.slice(0, 5).map(async (p) => {
+            const id = p._id || p.id
+            let quantity = 0
+            try {
+              const inv = await getInventory(id)
+              quantity = inv?.quantity ?? inv?.stock ?? 0
+            } catch {
+              quantity = 0
+            }
+            return {
+              product: p.name,
+              units: quantity,
+              revenue: Number(p.price || 0) * quantity
+            }
+          })
+        )
+        setTopProducts(productsWithStock)
+
+        // Generate dynamic alerts
+        const dynamicAlerts = []
+
+        // Check for low stock products
+        const lowStockCount = productsWithStock.filter(p => p.units > 0 && p.units < 10).length
+        if (lowStockCount > 0) {
+          dynamicAlerts.push({ id: 1, message: `${lowStockCount} product(s) low on stock` })
+        }
+
+        // Check for pending orders
+        if (pendingShipments > 0) {
+          dynamicAlerts.push({ id: 2, message: `${pendingShipments} order(s) pending shipment` })
+        }
+
+        // Check for refunds
+        if (refundedPayments.length > 0) {
+          dynamicAlerts.push({ id: 3, message: `${refundedPayments.length} refund(s) processed` })
+        }
+
+        if (dynamicAlerts.length === 0) {
+          dynamicAlerts.push({ id: 4, message: 'No alerts at this time' })
+        }
+
+        setAlerts(dynamicAlerts)
+      } catch (error) {
+        console.error('Dashboard error:', error)
+        setStats({ totalOrders: 0, totalEarnings: 0, pendingShipments: 0, returnRate: 0 })
+        setSalesData({ totalRevenue: 0 })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
   }, [salesPeriod])
 
   const formatCurrency = (amount) =>

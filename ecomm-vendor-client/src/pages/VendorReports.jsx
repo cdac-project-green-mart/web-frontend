@@ -1,39 +1,59 @@
 import { useState } from 'react'
+import { generateOrdersReport, downloadBlob } from '../api/reports'
 
-const MOCK_REPORTS = [
-  {
-    id: 1,
-    name: 'All Orders Report',
-    dateRange: '01-05 Oct 2025',
-    type: 'Orders',
-    format: 'CSV',
-    generatedOn: '06 Oct 2025',
-    status: 'Ready',
-  },
-  {
-    id: 2,
-    name: 'Returned Orders Report',
-    dateRange: '01-05 Oct 2025',
-    type: 'Returns',
-    format: 'Excel',
-    generatedOn: '06 Oct 2025',
-    status: 'Processing',
-  },
-]
-
+// Reports page with API integration
 export default function VendorReports() {
-  const [reports, setReports] = useState(MOCK_REPORTS)
+  const [reports, setReports] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({ type: '', text: '' })
 
   // Form states
-  const [reportType, setReportType] = useState('')
-  const [fromDate, setFromDate] = useState('2025-10-01')
-  const [toDate, setToDate] = useState('2025-10-05')
-  const [format, setFormat] = useState('')
+  const [reportType, setReportType] = useState('orders')
+  const [fromDate, setFromDate] = useState('2026-01-01')
+  const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0])
+  const [format, setFormat] = useState('csv')
 
   // Schedule states
   const [frequency, setFrequency] = useState('Weekly')
   const [scheduleFormat, setScheduleFormat] = useState('Excel')
   const [emailReport, setEmailReport] = useState(false)
+
+  const handleGenerateReport = async () => {
+    if (!reportType) {
+      setMessage({ type: 'error', text: 'Please select a report type' })
+      return
+    }
+
+    setLoading(true)
+    setMessage({ type: '', text: '' })
+
+    try {
+      if (reportType === 'orders') {
+        const blob = await generateOrdersReport(fromDate, toDate, format)
+        const filename = `orders_report_${fromDate}_to_${toDate}.${format}`
+        downloadBlob(blob, filename)
+
+        // Add to generated reports list
+        const newReport = {
+          id: Date.now(),
+          name: `Orders Report`,
+          dateRange: `${fromDate} - ${toDate}`,
+          type: 'Orders',
+          format: format.toUpperCase(),
+          generatedOn: new Date().toLocaleDateString('en-IN'),
+          status: 'Ready'
+        }
+        setReports(prev => [newReport, ...prev])
+        setMessage({ type: 'success', text: 'Report downloaded successfully!' })
+      } else {
+        setMessage({ type: 'info', text: `${reportType} reports are not yet available.` })
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || 'Failed to generate report' })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="space-y-8 font-sans text-gray-800">
@@ -44,10 +64,19 @@ export default function VendorReports() {
         <p className="text-gray-500 text-sm mt-1">Download reports or schedule automatic report generation.</p>
       </div>
 
+      {/* Status Message */}
+      {message.text && (
+        <div className={`border rounded-lg p-4 text-sm ${message.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
+            message.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
+              'bg-blue-50 border-blue-200 text-blue-800'
+          }`}>
+          {message.text}
+        </div>
+      )}
+
       {/* Generate Reports Controls */}
       <div className="flex flex-wrap items-end gap-3 p-1 rounded-lg">
         <div className="flex flex-col gap-1">
-          {/* Label placeholders if needed, assuming implicit labeling or alignment */}
           <select
             className="w-40 px-3 py-2 border border-gray-200 rounded text-sm bg-gray-50 text-gray-600 focus:outline-none"
             value={reportType}
@@ -86,24 +115,17 @@ export default function VendorReports() {
             value={format}
             onChange={(e) => setFormat(e.target.value)}
           >
-            <option value="">Format</option>
             <option value="csv">CSV</option>
-            <option value="excel">Excel</option>
-            <option value="pdf">PDF</option>
+            <option value="json">JSON</option>
           </select>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <select
-            className="w-40 px-3 py-2 border border-gray-200 rounded text-sm bg-gray-50 text-gray-600 focus:outline-none"
-          >
-            <option>Generate Now</option>
-            <option>Schedule for Later</option>
-          </select>
-        </div>
-
-        <button className="px-6 py-2 bg-gray-900 hover:bg-black text-white text-sm rounded transition-colors mb-[1px]">
-          Apply
+        <button
+          className="px-6 py-2 bg-gray-900 hover:bg-black text-white text-sm rounded transition-colors mb-[1px] disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleGenerateReport}
+          disabled={loading}
+        >
+          {loading ? 'Generating...' : 'Generate Report'}
         </button>
       </div>
 

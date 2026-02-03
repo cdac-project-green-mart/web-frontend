@@ -1,68 +1,29 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-
-const DATA = {
-  unshipped: [
-    {
-      id: 'ORD-10293',
-      product: 'Blue T-Shirt',
-      dateReceived: '05 Oct 2025',
-      amount: 499,
-      status: 'Pending',
-    },
-    {
-      id: 'ORD-10294',
-      product: 'Coffee Mug',
-      dateReceived: '05 Oct 2025',
-      amount: 299,
-      status: 'Pending',
-    },
-  ],
-  shipped: [
-    {
-      id: 'ORD-10290',
-      product: 'Blue T-Shirt',
-      dateReceived: '03 Oct 2025',
-      dateShipped: '04 Oct 2025',
-      amount: 499,
-      status: 'Shipped',
-    },
-    {
-      id: 'ORD-10291',
-      product: 'Coffee Mug',
-      dateReceived: '03 Oct 2025',
-      dateShipped: '04 Oct 2025',
-      amount: 299,
-      status: 'Shipped',
-    },
-    {
-      id: 'ORD-10292',
-      product: 'Notebook',
-      dateReceived: '03 Oct 2025',
-      dateShipped: '05 Oct 2025',
-      amount: 149,
-      status: 'Shipped',
-    },
-  ],
-}
+import { getVendorOrders } from '../api/orders'
 
 export default function VendorOrders() {
+  const [ordersList, setOrdersList] = useState([])
+  const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('unshipped')
   const [selectedOrders, setSelectedOrders] = useState([])
   const [bulkAction, setBulkAction] = useState('')
   const [openMenuId, setOpenMenuId] = useState(null)
 
-  /** 🔑 Single source of truth */
-  const orders = DATA[activeTab]
+  useEffect(() => {
+    setLoading(true)
+    getVendorOrders()
+      .then((data) => setOrdersList(Array.isArray(data) ? data : []))
+      .catch(() => setOrdersList([]))
+      .finally(() => setLoading(false))
+  }, [])
 
-  const allSelected =
-    orders.length > 0 &&
-    selectedOrders.length === orders.length
+  const unshipped = ordersList.filter((o) => o.status === 'PENDING' || o.status === 'CONFIRMED')
+  const shipped = ordersList.filter((o) => o.status === 'SHIPPED' || o.status === 'COMPLETED')
+  const orders = activeTab === 'unshipped' ? unshipped : shipped
 
-  const totalValue = useMemo(
-    () => orders.reduce((sum, o) => sum + o.amount, 0),
-    [orders]
-  )
+  const allSelected = orders.length > 0 && selectedOrders.length === orders.length
+  const totalValue = useMemo(() => orders.reduce((sum, o) => sum + (Number(o.totalAmount) || Number(o.amount) || 0), 0), [orders])
 
   const switchTab = (tab) => {
     setActiveTab(tab)
@@ -72,16 +33,12 @@ export default function VendorOrders() {
   }
 
   const toggleSelectAll = () => {
-    setSelectedOrders(
-      allSelected ? [] : orders.map((o) => o.id)
-    )
+    setSelectedOrders(allSelected ? [] : orders.map((o) => o.id || o.orderId))
   }
 
   const toggleSelectOne = (id) => {
     setSelectedOrders((prev) =>
-      prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     )
   }
 
@@ -99,9 +56,9 @@ export default function VendorOrders() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-gray-800">
-        Orders
-      </h1>
+      <h1 className="text-xl font-semibold text-gray-800">Orders</h1>
+
+      {loading && <p className="text-gray-500">Loading orders...</p>}
 
       {/* Tabs */}
       <div className="flex gap-2">
@@ -190,88 +147,52 @@ export default function VendorOrders() {
           </thead>
 
           <tbody>
-            {orders.map((order) => (
-              <tr
-                key={order.id}
-                className="border-t border-gray-100"
-              >
-                <td className="p-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedOrders.includes(order.id)}
-                    onChange={() =>
-                      toggleSelectOne(order.id)
-                    }
-                  />
-                </td>
-
-                <td className="p-3">{order.product}</td>
-                <td className="p-3 text-blue-600">
-                  <Link to={`/order-details/${order.id}`} className="hover:underline">
-                    #{order.id}
-                  </Link>
-                </td>
-                <td className="p-3">
-                  {order.dateReceived}
-                </td>
-
-                {activeTab === 'shipped' && (
+            {orders.map((order) => {
+              const oid = order.id || order.orderId
+              const productLabel = order.items?.[0]?.name || 'Order'
+              const dateReceived = order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '—'
+              const amount = Number(order.totalAmount ?? order.amount) ?? 0
+              return (
+                <tr key={oid} className="border-t border-gray-100">
                   <td className="p-3">
-                    {order.dateShipped}
+                    <input
+                      type="checkbox"
+                      checked={selectedOrders.includes(oid)}
+                      onChange={() => toggleSelectOne(oid)}
+                    />
                   </td>
-                )}
-
-                <td className="p-3">
-                  ₹{order.amount}
-                </td>
-                <td className="p-3 text-gray-600">
-                  {order.status}
-                </td>
-
-                <td className="p-3 relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(
-                        openMenuId === order.id
-                          ? null
-                          : order.id
-                      )
-                    }
-                    className="px-2 py-1 border border-gray-200 rounded text-gray-500 hover:bg-gray-50"
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === order.id && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-sm z-10">
-                      {activeTab === 'unshipped' && (
-                        <>
-                          <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
-                            Ship Order
-                          </button>
-                          <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
-                            Cancel Order
-                          </button>
-                        </>
-                      )}
-                      {activeTab === 'shipped' && (
-                        <>
-                          <Link
-                            to={`/order-details/${order.id}`}
-                            className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
-                          >
-                            View Details
-                          </Link>
-                          <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
-                            Download Invoice
-                          </button>
-                        </>
-                      )}
-                    </div>
+                  <td className="p-3">{productLabel}</td>
+                  <td className="p-3 text-blue-600">
+                    <Link to={`/order-details/${oid}`} className="hover:underline">
+                      #{String(oid).slice(0, 8)}
+                    </Link>
+                  </td>
+                  <td className="p-3">{dateReceived}</td>
+                  {activeTab === 'shipped' && (
+                    <td className="p-3">{order.updatedAt ? new Date(order.updatedAt).toLocaleDateString() : '—'}</td>
                   )}
-                </td>
-              </tr>
-            ))}
+                  <td className="p-3">₹{amount.toFixed(2)}</td>
+                  <td className="p-3 text-gray-600">{order.status || '—'}</td>
+
+                  <td className="p-3 relative">
+                    <button
+                      type="button"
+                      onClick={() => setOpenMenuId(openMenuId === oid ? null : oid)}
+                      className="px-2 py-1 border border-gray-200 rounded text-gray-500 hover:bg-gray-50"
+                    >
+                      ⋮
+                    </button>
+                    {openMenuId === oid && (
+                      <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-sm z-10">
+                        <Link to={`/order-details/${oid}`} className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
+                          View Details
+                        </Link>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
@@ -279,9 +200,7 @@ export default function VendorOrders() {
       {/* Shipped summary only */}
       {activeTab === 'shipped' && (
         <div className="text-sm text-gray-600">
-          📦 {orders.length} shipped orders in October 2025 •
-          Total Value: ₹
-          {totalValue.toLocaleString('en-IN')}
+          📦 {orders.length} shipped order(s) • Total: ₹{totalValue.toFixed(2)}
         </div>
       )}
     </div>
