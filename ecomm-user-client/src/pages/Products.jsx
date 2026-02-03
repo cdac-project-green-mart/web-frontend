@@ -19,24 +19,13 @@ useEffect(() => {
 
       const allProducts = data.products || data || [];
 
-      let filteredProducts = category
+      const filteredProducts = category
         ? allProducts.filter(
             (p) =>
               p.category &&
               p.category.toLowerCase() === category.toLowerCase()
           )
         : allProducts;
-
-      // Client-side search by name/description (backend may not support search param)
-      if (search && search.trim()) {
-        const q = search.trim().toLowerCase();
-        filteredProducts = filteredProducts.filter(
-          (p) =>
-            (p.name && p.name.toLowerCase().includes(q)) ||
-            (p.title && p.title.toLowerCase().includes(q)) ||
-            (p.description && p.description.toLowerCase().includes(q))
-        );
-      }
 
       setProducts(filteredProducts);
     } catch (err) {

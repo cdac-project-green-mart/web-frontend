@@ -1,15 +1,11 @@
 /**
- * Cart helpers. When logged in, cart is server-side (API_REFERENCE: /api/orders/cart).
- * When guest, cart is localStorage. addToCart/update/remove delegate to server when logged in.
+ * Cart helpers (localStorage). Add/update respect available inventory from backend-inventory-service.
  */
 
 import { getStock } from '../api/inventoryApi';
 
 export const getCartItems = () => {
-  if (typeof window === 'undefined') return [];
   try {
-    const token = localStorage.getItem('token');
-    if (token) return []; // Server is source of truth when logged in
     return JSON.parse(localStorage.getItem('cart') || '[]');
   } catch (e) {
     console.error('cartUtils.getCartItems:', e);
@@ -27,41 +23,14 @@ export const saveCartItems = (items) => {
 };
 
 /**
- * Add to cart. When logged in: calls orderApi.addToCart (server-side cart), then dispatches cartUpdated.
- * When guest: uses localStorage and caps quantity by inventory.
- * @returns {Promise<{ success: boolean, cart?: Array, message?: string, capped?: boolean }>}
+ * Add to cart; quantity is capped by available inventory. Uses backend-inventory-service via getStock.
+ * @returns {Promise<{ success: boolean, cart: Array, message?: string, capped?: boolean }>}
  */
 export const addToCart = async (product, quantity = 1) => {
-  const id = String(product.id ?? product._id ?? '').trim();
-  if (!id || id === 'undefined') return { success: false, cart: getCartItems(), message: 'Invalid product' };
-
-  if (isLoggedIn()) {
-    try {
-      const name = String(product.name ?? product.title ?? '').trim();
-      const price = Number(product.price);
-      const qty = Math.max(1, Math.floor(Number(quantity) || 1));
-      if (!name) return { success: false, message: 'Product name is required' };
-      if (Number.isNaN(price) || price <= 0) return { success: false, message: 'Invalid product price' };
-
-      const { addToCart: addToCartApi } = await import('../api/orderApi');
-      await addToCartApi({
-        productId: id,
-        name,
-        price,
-        quantity: qty,
-      });
-      window.dispatchEvent(new CustomEvent('cartUpdated'));
-      return { success: true };
-    } catch (e) {
-      const status = e.response?.status;
-      const msg = e.response?.data?.message || e.message || 'Could not add to cart';
-      if (status === 401) return { success: false, message: 'Please log in to add items to cart' };
-      return { success: false, message: msg };
-    }
-  }
-
+  const id = product.id ?? product._id;
   const cart = getCartItems();
   const currentQty = cart.find((i) => i.id === id)?.quantity ?? 0;
+
   let available = Infinity;
   try {
     const stockInfo = await getStock(id);
@@ -134,58 +103,5 @@ export const updateCartQuantity = async (productId, quantity) => {
   return getCartItems();
 };
 
-/** When logged in returns 0 (Navbar/CartPopup fetch server cart for count). */
 export const getCartTotalItems = () =>
   getCartItems().reduce((n, i) => n + i.quantity, 0);
-
-/** Check if user has a valid token in localStorage */
-export const isLoggedIn = () => {
-  try {
-    const token = localStorage.getItem('token');
-    return !!token;
-  } catch {
-    return false;
-  }
-};
-
-/** Clear auth data and cart-related session; does not clear cart items */
-export const logout = () => {
-  try {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  } catch (e) {
-    console.error('cartUtils.logout:', e);
-  }
-};
-
-/**
- * After login: sync guest cart (localStorage) to server, then clear local.
- * API_REFERENCE: cart is server-side via /api/orders/cart when logged in.
- */
-export const mergeGuestCartToUser = async () => {
-  if (!isLoggedIn()) {
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
-    return;
-  }
-  try {
-    const { addToCart } = await import('../api/orderApi');
-    const local = getCartItems();
-    for (const item of local) {
-      try {
-        await addToCart({
-          productId: item.id,
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity ?? 1,
-        });
-      } catch (e) {
-        console.warn('mergeGuestCartToUser: add item failed', item.id, e);
-      }
-    }
-    saveCartItems([]);
-  } catch (e) {
-    console.warn('mergeGuestCartToUser:', e);
-  }
-  window.dispatchEvent(new CustomEvent('cartUpdated'));
-};

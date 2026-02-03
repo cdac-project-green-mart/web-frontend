@@ -1,32 +1,18 @@
-/**
- * Axios instance for Green Mart API.
- * All requests go through API Gateway (deployment-repo, port 8080).
- * Base URL /api → proxied to gateway.
- */
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 15000,
+  baseURL: '/api', 
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Auth: Bearer token
+//for authentication
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-  }
-  // X-User-Id required for orders, cart, checkout, payments (per API_REFERENCE)
-  const user = localStorage.getItem('user');
-  if (user) {
-    try {
-      const u = JSON.parse(user);
-      const userId = u.id ?? u._id ?? u.email;
-      if (userId) config.headers['X-User-Id'] = String(userId);
-    } catch (_) {}
   }
   return config;
 });

@@ -44,7 +44,21 @@ export default function OrderDetails() {
   useEffect(() => {
     if (!isLoggedIn() || !orderId) return;
 
-    getOrderById(orderId)
+    const userId = (() => {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u.email || u.id || "";
+      } catch {
+        return "";
+      }
+    })();
+
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    getOrderById(orderId, userId)
       .then((data) => setOrder(data))
       .catch((err) =>
         setError(
