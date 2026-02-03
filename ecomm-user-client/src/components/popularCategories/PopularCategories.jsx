@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import CategoryCard from "./CategoryCard";
-import CategoryCard from './CategoryCard'
 
 import freshFruit from '../../assets/fresh-fruit.png'
 import freshVeg from '../../assets/fresh-veg.png'
