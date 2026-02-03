@@ -21,6 +21,14 @@ const normalizeCart = (serverCart) => {
     : [];
 };
 
+// deployment-repo Cart returns totalPrice
+const getCartTotal = (serverCart, items) => {
+  const total = serverCart?.total ?? serverCart?.totalPrice;
+  if (typeof total === "number") return total;
+  if (total != null) return Number(total) || 0;
+  return items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 0), 0);
+};
+
 export default function Checkout() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
@@ -65,7 +73,7 @@ export default function Checkout() {
       try {
         let serverCart = await getCart();
         let items = normalizeCart(serverCart);
-        const total = serverCart?.total ?? items.reduce((s, i) => s + i.price * i.quantity, 0);
+        let total = getCartTotal(serverCart, items);
 
         if (items.length === 0) {
           const local = getCartItems();
@@ -106,16 +114,15 @@ export default function Checkout() {
     }
     setSubmitting(true);
     try {
+      // deployment-repo CheckoutRequest requires street, city, zip, country (non-empty)
+      const shippingAddress = {
+        street: shipping.street?.trim() || "Not specified",
+        city: shipping.city?.trim() || "Not specified",
+        zip: shipping.zip?.trim() || "000000",
+        country: shipping.country?.trim() || "India",
+      };
       const result = await executeCheckout({
-        shippingAddress: {
-          name: shipping.name?.trim() || "",
-          email: shipping.email?.trim() || "",
-          street: shipping.street?.trim() || "",
-          city: shipping.city?.trim() || "",
-          zip: shipping.zip?.trim() || "",
-          country: shipping.country || "India",
-          phone: shipping.phone?.trim() || "",
-        },
+        shippingAddress,
         paymentMethod: "CREDIT_CARD",
       });
       const id = result?.orderId ?? result?.data?.orderId ?? result?.id;
@@ -220,9 +227,10 @@ export default function Checkout() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Street *</label>
                 <input
                   type="text"
+                  required
                   value={shipping.street}
                   onChange={(e) => setShipping((s) => ({ ...s, street: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -238,18 +246,20 @@ export default function Checkout() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">ZIP</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">ZIP *</label>
                 <input
                   type="text"
+                  required
                   value={shipping.zip}
                   onChange={(e) => setShipping((s) => ({ ...s, zip: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
                 <input
                   type="text"
+                  required
                   value={shipping.country}
                   onChange={(e) => setShipping((s) => ({ ...s, country: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"

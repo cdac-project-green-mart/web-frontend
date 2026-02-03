@@ -63,9 +63,9 @@ export const getOrderById = async (orderId) => {
 // —— Checkout (SAGA: cart → inventory → order → payment) ——
 
 /**
- * Execute checkout. Backend validates cart, reserves inventory, creates order, processes payment.
+ * Execute checkout (deployment-repo SAGA flow).
  * Body: { shippingAddress: { street, city, zip, country }, paymentMethod }
- * Response: { success, message, data: { orderId, transactionId, status, totalAmount } }
+ * Response: { success, orderId, transactionId, message }
  */
 export const executeCheckout = async ({ shippingAddress, paymentMethod = 'CREDIT_CARD' }) => {
   const { data } = await api.post('/checkout', {

@@ -1,7 +1,7 @@
 /**
  * Axios instance for Green Mart API.
- * All requests go through API Gateway (see deployment-repo/docs/API_REFERENCE.md).
- * Base URL /api → proxied to gateway (local: 8080).
+ * All requests go through API Gateway (deployment-repo, port 8080).
+ * Base URL /api → proxied to gateway.
  */
 import axios from 'axios';
 
