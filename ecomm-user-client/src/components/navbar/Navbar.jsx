@@ -1,14 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../../index.css'
 import GreenMartLogo from '../greenMartLogo/GreenMartLogo'
 import CartPopup from '../cartPopup/CartPopup'
-import { getCartItems, getCartTotalItems } from '../../utils/cartUtils'
+import { getCartItems, getCartTotalItems, isLoggedIn, logout } from '../../utils/cartUtils'
+import * as orderApi from '../../api/orderApi'
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const [openMenu, setOpenMenu] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false)
+
+  useEffect(() => {
+    setLoggedIn(isLoggedIn())
+    const onAuthChange = () => setLoggedIn(isLoggedIn())
+    window.addEventListener('authChanged', onAuthChange)
+    return () => window.removeEventListener('authChanged', onAuthChange)
+  }, [])
 
   const navbarRef = useRef(null)
   const hoverTimeoutRef = useRef(null)
@@ -16,24 +28,32 @@ const Navbar = () => {
   const [cartTotal, setCartTotal] = useState(0)
   const [cartItemCount, setCartItemCount] = useState(0)
 
-  // Load cart total and item count
+  // Load cart total and item count (server when logged in, local when guest)
   useEffect(() => {
-    const updateCartInfo = () => {
-      const cartItems = getCartItems()
-      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-      const count = getCartTotalItems()
-      setCartTotal(total)
-      setCartItemCount(count)
+    const updateCartInfo = async () => {
+      if (isLoggedIn()) {
+        try {
+          const serverCart = await orderApi.getCart()
+          const items = Array.isArray(serverCart?.items) ? serverCart.items : []
+          const sumTotal = items.reduce((s, i) => s + (i.price ?? 0) * (i.quantity ?? 0), 0)
+          const total = typeof serverCart?.total === 'number' ? serverCart.total : sumTotal
+          const count = items.reduce((n, i) => n + (i.quantity ?? 0), 0)
+          setCartTotal(total)
+          setCartItemCount(count)
+        } catch {
+          setCartTotal(0)
+          setCartItemCount(0)
+        }
+      } else {
+        const cartItems = getCartItems()
+        setCartTotal(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))
+        setCartItemCount(getCartTotalItems())
+      }
     }
 
     updateCartInfo()
-
-    // Listen for cart updates
     window.addEventListener('cartUpdated', updateCartInfo)
-
-    return () => {
-      window.removeEventListener('cartUpdated', updateCartInfo)
-    }
+    return () => window.removeEventListener('cartUpdated', updateCartInfo)
   }, [])
 
   const toggleMenu = (menu) => {
@@ -51,12 +71,22 @@ const Navbar = () => {
     }, 200)
   }
 
+  const handleLogout = () => {
+    logout()
+    setLoggedIn(false)
+    setMobileOpen(false)
+    setOpenMenu(null)
+    navigate('/')
+    window.dispatchEvent(new CustomEvent('authChanged'))
+  }
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (cartOpen) return
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
         setOpenMenu(null)
         setMobileOpen(false)
+        setAccountDropdownOpen(false)
       }
     }
 
@@ -79,20 +109,105 @@ const Navbar = () => {
 
           {/* SEARCH BAR (Desktop) */}
           <div className="hidden md:flex flex-1 px-10">
-            <div className="relative max-w-xl mx-auto w-full">
+            <form
+              className="relative max-w-xl mx-auto w-full"
+              onSubmit={(e) => {
+                e.preventDefault()
+                const q = searchQuery?.trim()
+                if (q) navigate(`/products?q=${encodeURIComponent(q)}`)
+                else navigate('/products')
+              }}
+            >
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
               />
-              <button className="absolute right-1 top-1 bg-green-600 text-white px-4 py-1.5 rounded-md text-sm">
+              <button type="submit" className="absolute right-1 top-1 bg-green-600 text-white px-4 py-1.5 rounded-md text-sm">
                 Search
               </button>
-            </div>
+            </form>
           </div>
 
-          {/* RIGHT ICONS */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* RIGHT ICONS: Account dropdown (or Login/Register) · Cart */}
+          <div className="hidden md:flex items-center gap-6">
+            <div className="flex items-center gap-3 border-r border-gray-200 pr-6">
+              {loggedIn ? (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setAccountDropdownOpen((v) => !v)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-green-600"
+                    title="Account"
+                    aria-expanded={accountDropdownOpen}
+                    aria-haspopup="true"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Account
+                    <svg className={`h-4 w-4 transition-transform ${accountDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {accountDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-30">
+                      <Link
+                        to="/account"
+                        onClick={() => setAccountDropdownOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        View profile
+                      </Link>
+                      <Link
+                        to="/orders"
+                        onClick={() => setAccountDropdownOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        View orders
+                      </Link>
+                      <hr className="my-1 border-gray-100" />
+                      <button
+                        type="button"
+                        onClick={() => { setAccountDropdownOpen(false); handleLogout(); }}
+                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4" />
+                        </svg>
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-green-600"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Log In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="text-sm font-medium text-gray-700 hover:text-green-600"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
             {/* Like */}
             <svg className="h-6 w-6" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
               <path
@@ -177,7 +292,9 @@ const Navbar = () => {
           }`}
         >
           <ul className="flex flex-col gap-3 px-6 text-base">
-            <li className="cursor-pointer">Home</li>
+            <Link to="/" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">Home</li>
+            </Link>
 
             {/* SHOP */}
             <li>
@@ -193,8 +310,9 @@ const Navbar = () => {
 
               {openMenu === 'shop' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
-                  <p className="cursor-pointer">Shop Grid</p>
-                  <p className="cursor-pointer">Product Details</p>
+                  <Link to="/products" onClick={() => { setMobileOpen(false); setOpenMenu(null); }}>
+                    <p className="cursor-pointer">Products</p>
+                  </Link>
                 </div>
               )}
             </li>
@@ -241,8 +359,35 @@ const Navbar = () => {
               )}
             </li>
 
-            <li className="cursor-pointer">About Us</li>
-            <li className="cursor-pointer">Contact Us</li>
+            <Link to="/about" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">About Us</li>
+            </Link>
+            <Link to="/contact" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">Contact Us</li>
+            </Link>
+            {loggedIn ? (
+              <>
+                <Link to="/account" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer text-green-600 font-medium">My Account</li>
+                </Link>
+                <li
+                  role="button"
+                  onClick={handleLogout}
+                  className="cursor-pointer text-red-600 font-medium"
+                >
+                  Logout
+                </li>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer">Log In</li>
+                </Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer">Register</li>
+                </Link>
+              </>
+            )}
           </ul>
         </div>
 
@@ -278,8 +423,9 @@ const Navbar = () => {
 
                 {openMenu === 'shop' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Product Details</p>
+                    <Link to="/products" onClick={() => setOpenMenu(null)}>
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Products</p>
+                    </Link>
                   </div>
                 )}
               </li>
@@ -314,12 +460,29 @@ const Navbar = () => {
                     <Link to="/orders">
                       <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p>
                     </Link>
-                    <Link to="/login">
-                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p>
-                    </Link>
-                    <Link to="/register">
-                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p>
-                    </Link>
+                    {loggedIn ? (
+                      <>
+                        <Link to="/account" onClick={() => setOpenMenu(null)}>
+                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Account</p>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => { setOpenMenu(null); handleLogout(); }}
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                        >
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login">
+                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p>
+                        </Link>
+                        <Link to="/register">
+                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p>
+                        </Link>
+                      </>
+                    )}
                   </div>
                 )}
               </li>
@@ -357,7 +520,10 @@ const Navbar = () => {
               <Link to="/about">
                 <li className="hover:text-green-600 cursor-pointer">About Us</li>
               </Link>
+              <Link to="/contact">
               <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
+              </Link>
+              
             </ul>
           </div>
         </div>

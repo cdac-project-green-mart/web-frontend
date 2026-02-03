@@ -40,18 +40,16 @@ export default function Login() {
       const token = data?.token ?? data?.accessToken;
       if (token) {
         localStorage.setItem("token", token);
-        // Store user info for account page
-        if (data?.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
+        // API_REFERENCE: response has data: { id, email, name, role } (or user in some backends)
+        const user = data?.data ?? data?.user;
+        if (user) {
+          localStorage.setItem("user", JSON.stringify({ id: user.id, email: user.email ?? email.trim(), name: user.name, role: user.role }));
         } else {
-          // Fallback: store email if user object not returned
           localStorage.setItem("user", JSON.stringify({ email: email.trim() }));
         }
-        // Merge guest cart items into user's cart
-        mergeGuestCartToUser();
-        // Dispatch auth changed event
+        // Sync guest cart to server (API_REFERENCE: cart is server-side when logged in)
+        await mergeGuestCartToUser();
         window.dispatchEvent(new CustomEvent('authChanged'));
-        // Navigate to the original destination or home
         navigate(from, { replace: true });
       } else {
         setError("Invalid response from server.");

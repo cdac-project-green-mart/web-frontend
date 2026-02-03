@@ -1,21 +1,18 @@
+/**
+ * Auth API – deployment-repo/docs/API_REFERENCE.md
+ * POST /api/auth/register, POST /api/auth/login, GET /api/auth/validate
+ */
 import api from './axios';
 
-/**
- * Auth API – aligned with imnits45-deployment-repo and backend-auth-service.
- * All paths are relative; baseURL from axios.js is '/api', so full paths are /api/auth/*.
- *
- * imnits45: POST /api/auth/register { name, email, password, role }
- *           POST /api/auth/login { email, password } → { success, token, user }
- * .NET:     POST /api/auth/signup { email, password } → { accessToken }
- *           POST /api/auth/login { email, password } → { accessToken }
- */
 export const register = async (name, email, password, role = 'CUSTOMER') => {
   const { data } = await api.post('/auth/register', { name, email, password, role });
+  // Response 201: { success, message, data: { id, email, name, role } }
   return data;
 };
 
 export const login = async (email, password) => {
   const { data } = await api.post('/auth/login', { email, password });
+  // Response 200: { success, token, data: { id, email, name, role } } (or user in some backends)
   return data;
 };
 
@@ -35,12 +32,11 @@ export function getAuthErrorMessage(err) {
   const body = res.data;
   const contentType = res.headers?.['content-type'] || '';
 
-  // If backend returns HTML (e.g. "Cannot POST /api/auth/login"), don't show raw HTML
   if (typeof body === 'string' && (contentType.includes('text/html') || body.trimStart().startsWith('<'))) {
     if (body.includes('Cannot POST') || body.includes('Cannot GET')) {
-      return 'Auth service unavailable. Make sure the API gateway and auth service are running.';
+      return 'Auth service unavailable. Make sure the API gateway is running.';
     }
-    return 'Server returned an error. Check that the API gateway and auth service are running.';
+    return 'Server returned an error. Check the API gateway.';
   }
 
   const message = typeof body === 'string' ? body : body?.message;

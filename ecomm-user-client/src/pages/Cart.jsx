@@ -4,29 +4,56 @@ import {
   getCartItems,
   updateCartQuantity,
   removeFromCart,
+  isLoggedIn,
 } from '../utils/cartUtils'
 import { getStockForProducts } from '../api/inventoryApi'
+import * as orderApi from '../api/orderApi'
+
+const normalizeServerCart = (serverCart) => {
+  const raw = serverCart?.items ?? serverCart ?? []
+  return Array.isArray(raw)
+    ? raw.map((i) => ({
+        id: i.productId ?? i.id,
+        name: i.name ?? 'Product',
+        price: Number(i.price ?? 0),
+        quantity: i.quantity ?? 1,
+        image: i.image,
+      }))
+    : []
+}
 
 // React component for the Cart page
 const Cart = () => {
   const navigate = useNavigate()
   
   const [cartItems, setCartItems] = useState([])
-  const [inventoryByProduct, setInventoryByProduct] = useState({}) // productId -> { stock } from backend-inventory-service
-
+  const [inventoryByProduct, setInventoryByProduct] = useState({})
+  const [loading, setLoading] = useState(true)
   const [couponCode, setCouponCode] = useState('')
 
-  useEffect(() => {
-    const loadCart = () => {
-      const items = getCartItems()
-      setCartItems(items)
+  const loadCart = async () => {
+    if (isLoggedIn()) {
+      try {
+        const serverCart = await orderApi.getCart()
+        setCartItems(normalizeServerCart(serverCart))
+      } catch (_) {
+        setCartItems([])
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      setCartItems(getCartItems())
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     loadCart()
-    window.addEventListener('cartUpdated', loadCart)
-    return () => window.removeEventListener('cartUpdated', loadCart)
+    const onUpdate = () => loadCart()
+    window.addEventListener('cartUpdated', onUpdate)
+    return () => window.removeEventListener('cartUpdated', onUpdate)
   }, [])
 
-  // Fetch inventory from backend-inventory-service for all cart items
   useEffect(() => {
     if (cartItems.length === 0) {
       setInventoryByProduct({})
@@ -36,15 +63,31 @@ const Cart = () => {
     getStockForProducts(ids).then(setInventoryByProduct)
   }, [cartItems])
 
-  // Function to update the quantity of a specific item (capped by inventory)
   const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return
+    if (isLoggedIn()) {
+      try {
+        await orderApi.updateCartItem(id, newQuantity)
+        loadCart()
+      } catch (_) {
+        loadCart()
+      }
+      return
+    }
     const updatedCart = await updateCartQuantity(id, newQuantity)
     setCartItems(updatedCart)
   }
 
-  // Function to remove an item from cart
-  const removeItem = (id) => {
+  const removeItem = async (id) => {
+    if (isLoggedIn()) {
+      try {
+        await orderApi.removeFromCartApi(id)
+        loadCart()
+      } catch (_) {
+        loadCart()
+      }
+      return
+    }
     const updatedCart = removeFromCart(id)
     setCartItems(updatedCart)
   }
@@ -58,7 +101,15 @@ const Cart = () => {
   // Total = subtotal + shipping
   const total = subtotal + shipping
 
-  // JSX UI
+  if (loading) {
+    return (
+      <div className="w-full max-w-6xl mx-auto p-6">
+        <h1 className="text-3xl font-bold text-center mb-8">My Shopping Cart</h1>
+        <div className="text-center py-12 text-gray-600">Loading cart…</div>
+      </div>
+    )
+  }
+
   if (cartItems.length === 0) {
     return (
       <div className="w-full max-w-6xl mx-auto p-6">
@@ -178,11 +229,7 @@ const Cart = () => {
                 Return to shop
               </button>
               <button
-                onClick={() => {
-                  // Refresh cart from localStorage
-                  const items = getCartItems()
-                  setCartItems(items)
-                }}
+                onClick={() => loadCart()}
                 className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 text-sm hover:bg-gray-50"
               >
                 Update Cart
