@@ -31,6 +31,18 @@ export default function VendorSidebar() {
               </NavLink>
             </li>
           ))}
+          {/* Profile link */}
+          <li>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ${isActive ? 'bg-gray-100 font-medium' : ''
+                }`
+              }
+            >
+              Profile
+            </NavLink>
+          </li>
           {/* Settings appears only when accessed from dropdown */}
           {isSettingsAccessedFromDropdown && (
             <li>

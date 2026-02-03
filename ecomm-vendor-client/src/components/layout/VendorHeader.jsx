@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 export default function VendorHeader() {
+  const { user } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
@@ -47,7 +49,7 @@ export default function VendorHeader() {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
           >
-            <span>Vendor</span>
+            <span>{user?.name || 'Vendor'}</span>
             <svg
               className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
               fill="none"
