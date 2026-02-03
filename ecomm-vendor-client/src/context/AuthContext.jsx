@@ -9,7 +9,6 @@ import {
   login as apiLogin,
   register as apiRegister,
   validateToken,
-  logout as apiLogout,
 } from "../api/auth.js";
 
 const AuthContext = createContext(null);
@@ -19,6 +18,7 @@ const STORAGE_KEYS = {
   userId: "userId",
   userRole: "userRole",
   userName: "userName",
+  userEmail: "userEmail",
 };
 
 function persistUser(token, user) {
@@ -27,6 +27,7 @@ function persistUser(token, user) {
   localStorage.setItem(STORAGE_KEYS.userId, user.id || "");
   localStorage.setItem(STORAGE_KEYS.userRole, user.role || "");
   localStorage.setItem(STORAGE_KEYS.userName, user.name || "");
+  localStorage.setItem(STORAGE_KEYS.userEmail, user.email || "");
 }
 
 function clearUser() {
@@ -80,12 +81,7 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
-  const logout = useCallback(async () => {
-    try {
-      await apiLogout();
-    } catch (err) {
-      // ignore errors from backend during logout
-    }
+  const logout = useCallback(() => {
     clearUser();
     setUser(null);
     window.location.href = "/login";
