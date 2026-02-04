@@ -1,3 +1,48 @@
+# Ecobazar – Frontend
+
+React + Vite frontend for Ecobazar e-commerce. Uses **deployment-repo** API Gateway and microservices.
+
+## Prerequisites
+
+Start the **deployment-repo** backend stack first. The frontend proxies all `/api/*` to the gateway at `http://localhost:8080`.
+
+### Start deployment-repo (Docker)
+
+```bash
+cd deployment-repo
+docker-compose up -d
+```
+
+### Or start deployment-repo manually
+
+1. Start databases: `docker-compose up -d postgres mongodb`
+2. Start Eureka: `cd eureka-server && ./mvnw spring-boot:run`
+3. Start API Gateway: `cd api-gateway && ./mvnw spring-boot:run`
+4. Start all microservices (auth, product, inventory, order, checkout, payment, user)
+
+See `deployment-repo/README.md` for full setup.
+
+## Run Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:5173`. API calls go to gateway at `http://localhost:8080`.
+
+## API Gateway URL
+
+Default: `http://localhost:8080`. Override with `.env`:
+
+```
+VITE_API_GATEWAY_URL=http://localhost:8080
+```
+
+Production: `VITE_API_GATEWAY_URL=http://68.183.86.246:8080`
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

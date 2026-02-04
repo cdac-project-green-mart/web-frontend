@@ -79,16 +79,26 @@ const Navbar = () => {
 
           {/* SEARCH BAR (Desktop) */}
           <div className="hidden md:flex flex-1 px-10">
-            <div className="relative max-w-xl mx-auto w-full">
+            <form
+              className="relative max-w-xl mx-auto w-full"
+              onSubmit={(e) => {
+                e.preventDefault()
+                const q = searchQuery?.trim()
+                if (q) navigate(`/products?q=${encodeURIComponent(q)}`)
+                else navigate('/products')
+              }}
+            >
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
               />
-              <button className="absolute right-1 top-1 bg-green-600 text-white px-4 py-1.5 rounded-md text-sm">
+              <button type="submit" className="absolute right-1 top-1 bg-green-600 text-white px-4 py-1.5 rounded-md text-sm">
                 Search
               </button>
-            </div>
+            </form>
           </div>
 
           {/* RIGHT ICONS */}
@@ -177,7 +187,9 @@ const Navbar = () => {
           }`}
         >
           <ul className="flex flex-col gap-3 px-6 text-base">
-            <li className="cursor-pointer">Home</li>
+            <Link to="/" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">Home</li>
+            </Link>
 
             {/* SHOP */}
             <li>
@@ -193,8 +205,9 @@ const Navbar = () => {
 
               {openMenu === 'shop' && (
                 <div className="ml-4 mt-2 flex flex-col gap-2 dropdown">
-                  <p className="cursor-pointer">Shop Grid</p>
-                  <p className="cursor-pointer">Product Details</p>
+                  <Link to="/products" onClick={() => { setMobileOpen(false); setOpenMenu(null); }}>
+                    <p className="cursor-pointer">Products</p>
+                  </Link>
                 </div>
               )}
             </li>
@@ -241,8 +254,35 @@ const Navbar = () => {
               )}
             </li>
 
-            <li className="cursor-pointer">About Us</li>
-            <li className="cursor-pointer">Contact Us</li>
+            <Link to="/about" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">About Us</li>
+            </Link>
+            <Link to="/contact" onClick={() => setMobileOpen(false)}>
+              <li className="cursor-pointer">Contact Us</li>
+            </Link>
+            {loggedIn ? (
+              <>
+                <Link to="/account" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer text-green-600 font-medium">My Account</li>
+                </Link>
+                <li
+                  role="button"
+                  onClick={handleLogout}
+                  className="cursor-pointer text-red-600 font-medium"
+                >
+                  Logout
+                </li>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer">Log In</li>
+                </Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)}>
+                  <li className="cursor-pointer">Register</li>
+                </Link>
+              </>
+            )}
           </ul>
         </div>
 
@@ -278,8 +318,9 @@ const Navbar = () => {
 
                 {openMenu === 'shop' && (
                   <div className="absolute bg-white border shadow-md w-40 mt-2 rounded text-sm z-20 dropdown">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Shop Grid</p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Product Details</p>
+                    <Link to="/products" onClick={() => setOpenMenu(null)}>
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Products</p>
+                    </Link>
                   </div>
                 )}
               </li>
@@ -358,6 +399,8 @@ const Navbar = () => {
                 <li className="hover:text-green-600 cursor-pointer">About Us</li>
               </Link>
               <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
+              </Link>
+              
             </ul>
           </div>
         </div>
