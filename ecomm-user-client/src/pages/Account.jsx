@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getCartItems, getCartTotalItems, isLoggedIn, logout } from "../utils/cartUtils";
+import * as orderApi from "../api/orderApi";
 
 export default function Account() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cartSummary, setCartSummary] = useState({ items: 0, total: 0 });
 
+  const updateCartSummary = (serverCartOrLocal) => {
+    if (Array.isArray(serverCartOrLocal)) {
+      const items = serverCartOrLocal.reduce((n, i) => n + (i.quantity ?? 0), 0);
+      const total = serverCartOrLocal.reduce((s, i) => s + (i.price ?? 0) * (i.quantity ?? 0), 0);
+      setCartSummary({ items, total });
+      return;
+    }
+    const items = serverCartOrLocal?.items ?? [];
+    const count = items.reduce((n, i) => n + (i.quantity ?? 0), 0);
+    const total = serverCartOrLocal?.total ?? serverCartOrLocal?.totalPrice ?? items.reduce((s, i) => s + (i.price ?? 0) * (i.quantity ?? 0), 0);
+    setCartSummary({ items: count, total: Number(total) || 0 });
+  };
+
   useEffect(() => {
-    // Check if user is logged in
     if (!isLoggedIn()) {
       navigate("/login", { state: { from: "/account" }, replace: true });
       return;
@@ -23,24 +36,22 @@ export default function Account() {
       }
     }
 
-    // Get cart summary
-    const cart = getCartItems();
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    setCartSummary({
-      items: getCartTotalItems(),
-      total: total,
-    });
-
-    // Listen for cart updates
-    const handleCartUpdate = () => {
-      const updatedCart = getCartItems();
-      const updatedTotal = updatedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      setCartSummary({
-        items: getCartTotalItems(),
-        total: updatedTotal,
-      });
+    const loadCart = async () => {
+      if (isLoggedIn()) {
+        try {
+          const serverCart = await orderApi.getCart();
+          updateCartSummary(serverCart);
+        } catch {
+          setCartSummary({ items: 0, total: 0 });
+        }
+      } else {
+        const cart = getCartItems();
+        updateCartSummary(cart);
+      }
     };
 
+    loadCart();
+    const handleCartUpdate = () => loadCart();
     window.addEventListener("cartUpdated", handleCartUpdate);
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, [navigate]);

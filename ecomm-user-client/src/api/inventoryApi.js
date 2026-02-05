@@ -35,7 +35,8 @@ export const checkStock = async (items) => {
 
 /**
  * Build a map productId -> { stock, available } from checkStock.
- * deployment-repo returns: { items: [{ productId, available (number), sufficient }], allAvailable }
+ * deployment-repo inventory checkAvailability returns:
+ * { items: [{ productId, requested, available (qty), sufficient }], allAvailable }
  */
 export const getStockForProducts = async (productIds) => {
   if (!productIds?.length) return {};
@@ -44,9 +45,9 @@ export const getStockForProducts = async (productIds) => {
     const items = result?.items ?? [];
     return Object.fromEntries(
       items.map((i) => [
-        i.productId,
+        String(i.productId),
         {
-          stock: i.stock ?? (typeof i.available === 'number' ? i.available : 0),
+          stock: typeof i.available === 'number' ? i.available : (i.stock ?? 0),
           available: i.sufficient !== false,
         },
       ])

@@ -1,6 +1,7 @@
 /**
- * Cart helpers. When logged in, cart is server-side (API_REFERENCE: /api/orders/cart).
- * When guest, cart is localStorage. addToCart/update/remove delegate to server when logged in.
+ * Cart helpers – deployment-repo
+ * When logged in: server-side cart via /api/orders/cart
+ * When guest: localStorage. addToCart/update/remove delegate to server when logged in.
  */
 
 import { getStock } from '../api/inventoryApi';
@@ -109,7 +110,7 @@ export const removeFromCart = (productId) => {
 };
 
 /**
- * Update quantity; new quantity is capped by available inventory from backend-inventory-service.
+ * Update quantity; capped by inventory from deployment-repo inventory service.
  * @returns {Promise<Array>} Updated cart
  */
 export const updateCartQuantity = async (productId, quantity) => {
@@ -159,8 +160,7 @@ export const logout = () => {
 };
 
 /**
- * After login: sync guest cart (localStorage) to server, then clear local.
- * API_REFERENCE: cart is server-side via /api/orders/cart when logged in.
+ * After login: sync guest cart to deployment-repo server cart, then clear local.
  */
 export const mergeGuestCartToUser = async () => {
   if (!isLoggedIn()) {

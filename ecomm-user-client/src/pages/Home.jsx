@@ -33,7 +33,8 @@ export default function Home() {
 
         const toArray = (data) => {
           if (Array.isArray(data)) return data;
-          if (data && Array.isArray(data.products)) return data.products;
+          if (data?.products && Array.isArray(data.products)) return data.products;
+          if (data?.data && Array.isArray(data.data)) return data.data;
           return [];
         };
         setPopularProducts(toArray(popularRes));
@@ -57,7 +58,7 @@ export default function Home() {
 
       <PopularProducts products={popularProducts} loading={loading} />
       <PromoSection />
-      <HotDeals products={featuredProducts} loading={loading} />
+      <HotDeals products={featuredProducts ?? []} loading={loading} />
 
       <LatestNews />
       <Testimonials />
