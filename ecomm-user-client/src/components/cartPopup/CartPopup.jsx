@@ -7,45 +7,23 @@ import {
   isLoggedIn,
 } from '../../utils/cartUtils'
 import { getStockForProducts } from '../../api/inventoryApi'
-import * as orderApi from '../../api/orderApi'
-
-const normalizeServerCart = (serverCart) => {
-  const raw = serverCart?.items ?? serverCart ?? []
-  return Array.isArray(raw)
-    ? raw.map((i) => ({
-        id: i.productId ?? i.id,
-        name: i.name ?? 'Product',
-        price: Number(i.price ?? 0),
-        quantity: i.quantity ?? 1,
-        image: i.image,
-      }))
-    : []
-}
 
 export default function CartPopup({ open, onClose }) {
   const navigate = useNavigate()
   const [items, setItems] = useState([])
   const [inventoryByProduct, setInventoryByProduct] = useState({})
 
-  const loadCart = async () => {
-    if (isLoggedIn()) {
-      try {
-        const serverCart = await orderApi.getCart()
-        setItems(normalizeServerCart(serverCart))
-      } catch (_) {
-        setItems([])
-      }
-    } else {
-      setItems(getCartItems())
-    }
-  }
-
   useEffect(() => {
+    const loadCart = () => {
+      const cartItems = getCartItems()
+      setItems(cartItems)
+    }
     loadCart()
     window.addEventListener('cartUpdated', loadCart)
     return () => window.removeEventListener('cartUpdated', loadCart)
   }, [])
 
+  // Fetch inventory from backend-inventory-service for cart items
   useEffect(() => {
     if (items.length === 0) {
       setInventoryByProduct({})
@@ -54,16 +32,7 @@ export default function CartPopup({ open, onClose }) {
     getStockForProducts(items.map((i) => i.id)).then(setInventoryByProduct)
   }, [items])
 
-  const removeItem = async (id) => {
-    if (isLoggedIn()) {
-      try {
-        await orderApi.removeFromCartApi(id)
-        loadCart()
-      } catch (_) {
-        loadCart()
-      }
-      return
-    }
+  const removeItem = (id) => {
     const updatedCart = removeFromCart(id)
     setItems(updatedCart)
   }
@@ -71,15 +40,6 @@ export default function CartPopup({ open, onClose }) {
   const increaseQty = async (id) => {
     const item = items.find((i) => i.id === id)
     if (!item) return
-    if (isLoggedIn()) {
-      try {
-        await orderApi.updateCartItem(id, item.quantity + 1)
-        loadCart()
-      } catch (_) {
-        loadCart()
-      }
-      return
-    }
     const updatedCart = await updateCartQuantity(id, item.quantity + 1)
     setItems(updatedCart)
   }
@@ -87,19 +47,7 @@ export default function CartPopup({ open, onClose }) {
   const decreaseQty = async (id) => {
     const item = items.find((i) => i.id === id)
     if (!item) return
-    if (item.quantity <= 1) {
-      removeItem(id)
-      return
-    }
-    if (isLoggedIn()) {
-      try {
-        await orderApi.updateCartItem(id, item.quantity - 1)
-        loadCart()
-      } catch (_) {
-        loadCart()
-      }
-      return
-    }
+    // updateCartQuantity(id, 0) internally calls removeFromCart
     const updatedCart = await updateCartQuantity(id, item.quantity - 1)
     setItems(updatedCart)
   }

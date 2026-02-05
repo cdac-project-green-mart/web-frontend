@@ -1,13 +1,8 @@
-/**
- * Axios instance for Green Mart API.
- * All requests go through API Gateway (deployment-repo, port 8080).
- * Base URL /api → proxied to gateway.
- */
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 15000,
+  baseURL: '/api', 
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },

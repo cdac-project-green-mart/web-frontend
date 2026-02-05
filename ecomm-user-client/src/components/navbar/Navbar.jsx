@@ -3,8 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import '../../index.css'
 import GreenMartLogo from '../greenMartLogo/GreenMartLogo'
 import CartPopup from '../cartPopup/CartPopup'
-import { getCartItems, getCartTotalItems, isLoggedIn, logout } from '../../utils/cartUtils'
-import * as orderApi from '../../api/orderApi'
+import { getCartItems, getCartTotalItems } from '../../utils/cartUtils'
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -12,16 +11,6 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false)
-
-  useEffect(() => {
-    setLoggedIn(isLoggedIn())
-    const onAuthChange = () => setLoggedIn(isLoggedIn())
-    window.addEventListener('authChanged', onAuthChange)
-    return () => window.removeEventListener('authChanged', onAuthChange)
-  }, [])
 
   // Sync search input with URL q param when on /products
   useEffect(() => {
@@ -64,8 +53,13 @@ const Navbar = () => {
     }
 
     updateCartInfo()
+
+    // Listen for cart updates
     window.addEventListener('cartUpdated', updateCartInfo)
-    return () => window.removeEventListener('cartUpdated', updateCartInfo)
+
+    return () => {
+      window.removeEventListener('cartUpdated', updateCartInfo)
+    }
   }, [])
 
   const toggleMenu = (menu) => {
@@ -99,7 +93,6 @@ const Navbar = () => {
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
         setOpenMenu(null)
         setMobileOpen(false)
-        setAccountDropdownOpen(false)
       }
     }
 
@@ -144,83 +137,8 @@ const Navbar = () => {
             </form>
           </div>
 
-          {/* RIGHT ICONS: Account dropdown (or Login/Register) · Cart */}
-          <div className="hidden md:flex items-center gap-6">
-            <div className="flex items-center gap-3 border-r border-gray-200 pr-6">
-              {loggedIn ? (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setAccountDropdownOpen((v) => !v)}
-                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-green-600"
-                    title="Account"
-                    aria-expanded={accountDropdownOpen}
-                    aria-haspopup="true"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    Account
-                    <svg className={`h-4 w-4 transition-transform ${accountDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {accountDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-30">
-                      <Link
-                        to="/account"
-                        onClick={() => setAccountDropdownOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        View profile
-                      </Link>
-                      <Link
-                        to="/orders"
-                        onClick={() => setAccountDropdownOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        View orders
-                      </Link>
-                      <hr className="my-1 border-gray-100" />
-                      <button
-                        type="button"
-                        onClick={() => { setAccountDropdownOpen(false); handleLogout(); }}
-                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4" />
-                        </svg>
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-green-600"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
-                    Log In
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="text-sm font-medium text-gray-700 hover:text-green-600"
-                  >
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
+          {/* RIGHT ICONS */}
+          <div className="hidden md:flex items-center gap-8">
             {/* Like */}
             <svg className="h-6 w-6" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
               <path
@@ -497,29 +415,12 @@ const Navbar = () => {
                     <Link to="/orders">
                       <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p>
                     </Link>
-                    {loggedIn ? (
-                      <>
-                        <Link to="/account" onClick={() => setOpenMenu(null)}>
-                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Account</p>
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => { setOpenMenu(null); handleLogout(); }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-                        >
-                          Logout
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link to="/login">
-                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p>
-                        </Link>
-                        <Link to="/register">
-                          <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p>
-                        </Link>
-                      </>
-                    )}
+                    <Link to="/login">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Log In</p>
+                    </Link>
+                    <Link to="/register">
+                      <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Register</p>
+                    </Link>
                   </div>
                 )}
               </li>
@@ -557,7 +458,6 @@ const Navbar = () => {
               <Link to="/about">
                 <li className="hover:text-green-600 cursor-pointer">About Us</li>
               </Link>
-              <Link to="/contact">
               <li className="hover:text-green-600 cursor-pointer">Contact Us</li>
               </Link>
               

@@ -25,9 +25,8 @@ export const getAllProducts = async (params = {}) => {
 };
 
 export const getProductById = async (id) => {
-  const response = await api.get(`${PRODUCTS_BASE}/${id}`);
-  const body = response.data;
-  return body?.data ?? body;
+  const response = await api.get(`/products/${id}`);
+  return response.data;
 };
 
 export const searchProducts = async (query) => {
