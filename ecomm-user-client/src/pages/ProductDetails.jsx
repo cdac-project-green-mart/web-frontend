@@ -13,7 +13,7 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [addMessage, setAddMessage] = useState(null);
-  const [inventory, setInventory] = useState(null); // { productId, productName, stock } from backend-inventory-service
+  const [inventory, setInventory] = useState(null); // deployment-repo inventory service
 
   useEffect(() => {
     const load = async () => {
@@ -87,7 +87,7 @@ export default function ProductDetails() {
           <p className="text-2xl text-green-600 font-bold mb-4">₹{product.price}</p>
           <p className="text-gray-600 mb-6">{product.description}</p>
           <p className="mb-4"><strong>Category:</strong> {product.category}</p>
-          {/* Stock from backend-inventory-service via inventoryApi */}
+          {/* Stock from deployment-repo inventory service */}
           {inventory !== null && (
             <p className={`mb-4 ${inventory.stock === 0 ? 'text-red-600 font-semibold' : ''}`}>
               <strong>Stock:</strong>{' '}

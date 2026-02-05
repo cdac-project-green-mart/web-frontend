@@ -24,12 +24,17 @@ export const createOrder = async ({ userId, userEmail, items, shippingAddress })
   return data?.data ?? data;
 };
 
-/**
- * Get user orders
- */
-export const getOrders = async (userId) => {
-  const { data } = await api.get('/orders', { params: { userId } });
-  return data?.data ?? data;
+export const clearCart = async () => {
+  const { data } = await api.delete('/orders/cart/clear');
+  return unwrap({ data });
+};
+
+// —— Orders ——
+
+export const getOrders = async () => {
+  const { data } = await api.get('/orders');
+  const payload = unwrap({ data });
+  return Array.isArray(payload) ? payload : payload?.data ?? [];
 };
 
 /**

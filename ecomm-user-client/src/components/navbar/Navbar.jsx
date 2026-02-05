@@ -1,14 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import '../../index.css'
 import GreenMartLogo from '../greenMartLogo/GreenMartLogo'
 import CartPopup from '../cartPopup/CartPopup'
 import { getCartItems, getCartTotalItems } from '../../utils/cartUtils'
 
 const Navbar = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [openMenu, setOpenMenu] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+
+  // Sync search input with URL q param when on /products
+  useEffect(() => {
+    if (location.pathname === '/products') {
+      const params = new URLSearchParams(location.search)
+      const q = params.get('q') || ''
+      setSearchQuery(q)
+    }
+  }, [location.pathname, location.search])
 
   const navbarRef = useRef(null)
   const hoverTimeoutRef = useRef(null)
@@ -16,14 +27,29 @@ const Navbar = () => {
   const [cartTotal, setCartTotal] = useState(0)
   const [cartItemCount, setCartItemCount] = useState(0)
 
-  // Load cart total and item count
+  // Load cart total and item count (deployment-repo: server when logged in, local when guest)
   useEffect(() => {
-    const updateCartInfo = () => {
-      const cartItems = getCartItems()
-      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-      const count = getCartTotalItems()
-      setCartTotal(total)
-      setCartItemCount(count)
+    const updateCartInfo = async () => {
+      if (isLoggedIn()) {
+        try {
+          const serverCart = await orderApi.getCart()
+          const items = Array.isArray(serverCart?.items) ? serverCart.items : []
+          const sumTotal = items.reduce((s, i) => s + (i.price ?? 0) * (i.quantity ?? 0), 0)
+          // deployment-repo Cart returns totalPrice; API_REFERENCE uses total
+          const total = serverCart?.total ?? serverCart?.totalPrice ?? sumTotal
+          const totalNum = typeof total === 'number' ? total : (Number(total) || sumTotal)
+          const count = items.reduce((n, i) => n + (i.quantity ?? 0), 0)
+          setCartTotal(totalNum)
+          setCartItemCount(count)
+        } catch {
+          setCartTotal(0)
+          setCartItemCount(0)
+        }
+      } else {
+        const cartItems = getCartItems()
+        setCartTotal(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))
+        setCartItemCount(getCartTotalItems())
+      }
     }
 
     updateCartInfo()
@@ -49,6 +75,16 @@ const Navbar = () => {
     hoverTimeoutRef.current = setTimeout(() => {
       setOpenMenu(null)
     }, 200)
+  }
+
+  const handleLogout = () => {
+    logout()
+    setLoggedIn(false)
+    setMobileOpen(false)
+    setOpenMenu(null)
+    navigate('/')
+    window.dispatchEvent(new CustomEvent('authChanged'))
+    window.dispatchEvent(new CustomEvent('cartUpdated'))
   }
 
   useEffect(() => {
@@ -183,9 +219,33 @@ const Navbar = () => {
         {/* MOBILE MENU */}
         <div
           className={`md:hidden bg-gray-50 border-t border-gray-200 overflow-hidden transition-all duration-300 ${
-            mobileOpen ? 'max-h-[500px] py-4' : 'max-h-0'
+            mobileOpen ? 'max-h-[600px] py-4' : 'max-h-0'
           }`}
         >
+          {/* Mobile Search */}
+          <form
+            className="px-6 pb-4"
+            onSubmit={(e) => {
+              e.preventDefault()
+              const q = searchQuery?.trim()
+              if (q) navigate(`/products?q=${encodeURIComponent(q)}`)
+              else navigate('/products')
+              setMobileOpen(false)
+            }}
+          >
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Search products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm"
+              />
+              <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded-md text-sm">
+                Search
+              </button>
+            </div>
+          </form>
           <ul className="flex flex-col gap-3 px-6 text-base">
             <Link to="/" onClick={() => setMobileOpen(false)}>
               <li className="cursor-pointer">Home</li>

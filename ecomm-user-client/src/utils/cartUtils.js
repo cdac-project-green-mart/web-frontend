@@ -1,5 +1,7 @@
 /**
- * Cart helpers (localStorage). Add/update respect available inventory from backend-inventory-service.
+ * Cart helpers – deployment-repo
+ * When logged in: server-side cart via /api/orders/cart
+ * When guest: localStorage. addToCart/update/remove delegate to server when logged in.
  */
 
 import { getStock } from '../api/inventoryApi';
@@ -78,7 +80,7 @@ export const removeFromCart = (productId) => {
 };
 
 /**
- * Update quantity; new quantity is capped by available inventory from backend-inventory-service.
+ * Update quantity; capped by inventory from deployment-repo inventory service.
  * @returns {Promise<Array>} Updated cart
  */
 export const updateCartQuantity = async (productId, quantity) => {
@@ -105,3 +107,54 @@ export const updateCartQuantity = async (productId, quantity) => {
 
 export const getCartTotalItems = () =>
   getCartItems().reduce((n, i) => n + i.quantity, 0);
+
+/** Check if user has a valid token in localStorage */
+export const isLoggedIn = () => {
+  try {
+    const token = localStorage.getItem('token');
+    return !!token;
+  } catch {
+    return false;
+  }
+};
+
+/** Clear auth data and cart-related session; does not clear cart items */
+export const logout = () => {
+  try {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  } catch (e) {
+    console.error('cartUtils.logout:', e);
+  }
+};
+
+/**
+ * After login: sync guest cart to deployment-repo server cart, then clear local.
+ */
+export const mergeGuestCartToUser = async () => {
+  if (!isLoggedIn()) {
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
+    return;
+  }
+  try {
+    const { addToCart } = await import('../api/orderApi');
+    const local = getCartItems();
+    for (const item of local) {
+      try {
+        await addToCart({
+          productId: item.id,
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity ?? 1,
+        });
+      } catch (e) {
+        console.warn('mergeGuestCartToUser: add item failed', item.id, e);
+      }
+    }
+    saveCartItems([]);
+  } catch (e) {
+    console.warn('mergeGuestCartToUser:', e);
+  }
+  window.dispatchEvent(new CustomEvent('cartUpdated'));
+};

@@ -14,7 +14,7 @@ import tomato from '../../assets/products/tomato.jpg'
 import mango from '../../assets/products/mango.jpg'
 import redCapsicum from '../../assets/products/red-capsicum.jpg'
 
-export default function HotDeals() {
+export default function HotDeals({ products: apiProducts = [], loading }) {
   const bigDeal = {
     badges: ['Sale 50%', 'Best Sale'],
     image: cabbage,
@@ -23,7 +23,7 @@ export default function HotDeals() {
     oldPrice: 24,
   }
 
-  const products = [
+  const staticProducts = [
     { image: cabbage, name: 'Chinese cabbage', price: 12 },
     { image: lettuce, name: 'Green Lettuce', price: 9 },
     { image: eggplant, name: 'Eggplant', price: 34 },
@@ -36,6 +36,21 @@ export default function HotDeals() {
     { image: tomato, name: 'Red Tomatoes', price: 9, oldPrice: 20, discount: 50 },
     { image: mango, name: 'Surjipuri Mango', price: 34 },
   ]
+
+  const toDealProduct = (p) => ({
+    id: p.id ?? p._id,
+    _id: p.id ?? p._id,
+    image: p.images?.[0] ?? p.image,
+    name: p.name ?? p.title,
+    price: p.price,
+    oldPrice: p.originalPrice ?? p.oldPrice,
+    discount: p.discount,
+  })
+
+  const products =
+    apiProducts?.length > 0 && !loading
+      ? apiProducts.map(toDealProduct)
+      : staticProducts
 
   const topRow = products.slice(0, 4)
   const bottomRow = products.slice(4, 8)

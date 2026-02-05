@@ -13,9 +13,28 @@ export const getStock = async (productId) => {
 };
 
 
+/**
+ * Build a map productId -> { stock, available } from checkStock.
+ * deployment-repo inventory checkAvailability returns:
+ * { items: [{ productId, requested, available (qty), sufficient }], allAvailable }
+ */
 export const getStockForProducts = async (productIds) => {
-  const entries = await Promise.all(
-    productIds.map(async (id) => {
+  if (!productIds?.length) return {};
+  try {
+    const result = await checkStock(productIds.map((id) => ({ productId: id, quantity: 1 })));
+    const items = result?.items ?? [];
+    return Object.fromEntries(
+      items.map((i) => [
+        String(i.productId),
+        {
+          stock: typeof i.available === 'number' ? i.available : (i.stock ?? 0),
+          available: i.sufficient !== false,
+        },
+      ])
+    );
+  } catch (_) {
+    const fallback = {};
+    for (const id of productIds) {
       try {
         const stock = await getStock(id);
         return [id, stock];
