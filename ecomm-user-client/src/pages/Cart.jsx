@@ -13,19 +13,19 @@ const normalizeServerCart = (serverCart) => {
   const raw = serverCart?.items ?? serverCart ?? []
   return Array.isArray(raw)
     ? raw.map((i) => ({
-        id: i.productId ?? i.id,
-        name: i.name ?? 'Product',
-        price: Number(i.price ?? 0),
-        quantity: i.quantity ?? 1,
-        image: i.image,
-      }))
+      id: i.productId ?? i.id,
+      name: i.name ?? 'Product',
+      price: Number(i.price ?? 0),
+      quantity: i.quantity ?? 1,
+      image: i.image,
+    }))
     : []
 }
 
 // React component for the Cart page
 const Cart = () => {
   const navigate = useNavigate()
-  
+
   const [cartItems, setCartItems] = useState([])
   const [inventoryByProduct, setInventoryByProduct] = useState({})
   const [loading, setLoading] = useState(true)
@@ -160,10 +160,9 @@ const Cart = () => {
                   />
                   <div className="flex flex-col">
                     <span className="font-medium text-gray-800 text-sm">{item.name}</span>
-                    {inventoryByProduct[item.id] != null && (
-                      <span className={`text-xs mt-0.5 ${
-                        inventoryByProduct[item.id]?.stock === 0 ? 'text-red-600 font-medium' : 'text-gray-500'
-                      }`}>
+                    {inventoryByProduct[item.id] != null && inventoryByProduct[item.id]?.stock !== null && (
+                      <span className={`text-xs mt-0.5 ${inventoryByProduct[item.id]?.stock === 0 ? 'text-red-600 font-medium' : 'text-gray-500'
+                        }`}>
                         {inventoryByProduct[item.id]?.stock === 0
                           ? 'Out of stock'
                           : `${inventoryByProduct[item.id]?.stock ?? '?'} available`}

@@ -52,14 +52,26 @@ export const getStockForProducts = async (productIds) => {
         },
       ])
     );
-  } catch (_) {
+  } catch (err) {
+    // If auth error (401/403), return null stock to indicate "unknown" rather than "out of stock"
+    const status = err.response?.status;
+    if (status === 401 || status === 403) {
+      console.warn('[inventoryApi] Auth required for stock check - returning null stock');
+      return Object.fromEntries(productIds.map((id) => [String(id), { stock: null, available: true }]));
+    }
+    // For other errors, try individual fetches as fallback
     const fallback = {};
     for (const id of productIds) {
       try {
         const s = await getStock(id);
         fallback[id] = s ? { stock: s.stock ?? s.quantity, available: true } : { stock: 0, available: false };
-      } catch {
-        fallback[id] = { stock: 0, available: false };
+      } catch (e) {
+        // If auth error on individual fetch, return null (unknown) not 0 (out of stock)
+        if (e.response?.status === 401 || e.response?.status === 403) {
+          fallback[id] = { stock: null, available: true };
+        } else {
+          fallback[id] = { stock: 0, available: false };
+        }
       }
     }
     return fallback;
