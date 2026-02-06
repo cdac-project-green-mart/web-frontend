@@ -1,6 +1,5 @@
 import api from './axios';
 
-
 export const getStock = async (productId) => {
   try {
     const { data } = await api.get(`/inventory/${String(productId)}`);
@@ -11,7 +10,6 @@ export const getStock = async (productId) => {
     throw err;
   }
 };
-
 
 export const getStockForProducts = async (productIds) => {
   const entries = await Promise.all(
@@ -27,7 +25,6 @@ export const getStockForProducts = async (productIds) => {
   return Object.fromEntries(entries);
 };
 
-
 export const decreaseStock = async (productId, quantity) => {
   const { data } = await api.post(`/inventory/${String(productId)}/decrease`, {
     quantity,
@@ -35,14 +32,12 @@ export const decreaseStock = async (productId, quantity) => {
   return data;
 };
 
-
 export const increaseStock = async (productId, quantity) => {
   const { data } = await api.post(`/inventory/${String(productId)}/increase`, {
     quantity,
   });
   return data;
 };
-
 
 export const getLowStockAlerts = async () => {
   try {
@@ -52,4 +47,4 @@ export const getLowStockAlerts = async () => {
     console.error('[inventoryApi] getLowStockAlerts:', err);
     return [];
   }
-}
+};

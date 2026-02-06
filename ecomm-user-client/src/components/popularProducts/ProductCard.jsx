@@ -20,7 +20,7 @@ export default function ProductCard({
   const [hovered, setHovered] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
   const [cartMessage, setCartMessage] = useState(null)
-  const [inventory, setInventory] = useState(null) // from backend-inventory-service via inventoryApi
+  const [inventory, setInventory] = useState(null) // deployment-repo inventory service
 
   useEffect(() => {
     getStock(_id).then(setInventory).catch(() => setInventory(null))
@@ -66,7 +66,7 @@ export default function ProductCard({
             {sale}
           </span>
         )}
-        {/* Out of stock from backend-inventory-service */}
+        {/* Out of stock from deployment-repo inventory service */}
         {outOfStock && (
           <span className="absolute top-2 left-2 bg-gray-800 text-white text-xs px-2 py-1 rounded z-20">
             Out of stock

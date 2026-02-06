@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getCartItems, saveCartItems, isLoggedIn } from "../utils/cartUtils";
-import { getCart, addToCart, executeCheckout } from "../api/orderApi";
+import { getCart, addToCart, executeCheckout, clearCart } from "../api/orderApi";
 
 const normalizeCart = (serverCart) => {
   const raw = serverCart?.items ?? serverCart ?? [];
@@ -125,16 +125,19 @@ export default function Checkout() {
         shippingAddress,
         paymentMethod: "CREDIT_CARD",
       });
+      // deployment-repo CheckoutResponse: { success, orderId, transactionId, message }
       const id = result?.orderId ?? result?.data?.orderId ?? result?.id;
       setOrderId(id);
       saveCartItems([]);
+      try {
+        await clearCart();
+      } catch (_) {}
       window.dispatchEvent(new CustomEvent("cartUpdated"));
       setDone(true);
       setTimeout(() => navigate(id ? `/orders/${id}` : "/orders"), 1500);
     } catch (err) {
-      setError(
-        err.response?.data?.message || err.message || "Checkout failed. Please try again."
-      );
+      const msg = err.response?.data?.message ?? err.response?.data?.error ?? err.message;
+      setError(msg || "Checkout failed. Please try again.");
     } finally {
       setSubmitting(false);
     }
